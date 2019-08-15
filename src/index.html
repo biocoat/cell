@@ -4,11 +4,20 @@
     <meta charset="UTF-8">
     <title>Cell</title>
     <link rel="Stylesheet" href="../node_modules/xterm/lib/xterm.css">
+    <link rel="Stylesheet" href="style.css">
+
   </head>
   <body>
+    <div style="width:inherit; height:500px;">
+      <div class="main-editor" id ="editor">
+
+      </div>
+    </div>
+    
     <div id="xterm"></div>
   </body>
   <script>
+    require('./editor.js')
     require('./renderer.js')
   </script>
 </html>

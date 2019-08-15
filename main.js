@@ -11,7 +11,7 @@ let mainWindow;
 function createWindow () {
 
   let mainWindow = new Window({
-    file: 'app/index.html'
+    file: 'src/index.html'
   });
 
   // Open the DevTools.

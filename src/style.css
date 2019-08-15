@@ -1,0 +1,5 @@
+.main-editor{
+    width: inherit;
+    height: inherit;
+    overflow: scroll;
+}

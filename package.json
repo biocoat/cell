@@ -10,6 +10,7 @@
   "author": "Wajdi Halabi",
   "dependencies": {
     "electron": "4.0.1",
+    "electron-json-storage": "^4.1.7",
     "graceful-fs": "^4.2.2",
     "node-pty": "^0.8.0",
     "xterm": "^3.14.0"
