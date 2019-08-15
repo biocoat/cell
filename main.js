@@ -1,11 +1,7 @@
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
 
-const path = require('path')
-const url = require('url')
 
 const Window = require('./window');
 // Keep a global reference of the window object, if you don't, the window will
@@ -39,6 +35,7 @@ app.on('ready', createWindow)
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  // eslint-disable-next-line no-undef
   if (process.platform !== 'darwin') {
     app.quit()
   }
