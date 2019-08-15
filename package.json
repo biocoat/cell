@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron . --ignore-gpu-blacklist"
   },
-  "repository": "https://github.com/Tyriar/node-pty",
+  "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",
   "dependencies": {
     "electron": "4.0.1",
