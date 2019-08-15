@@ -3,7 +3,7 @@ const electron = require('electron')
 const app = electron.app
 
 
-const Window = require('./window');
+const Window = require('./lib/window');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -11,7 +11,7 @@ let mainWindow;
 function createWindow () {
 
   let mainWindow = new Window({
-    file: 'src/index.html'
+    file: 'src/editor/index.html'
   });
 
   // Open the DevTools.
