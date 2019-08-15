@@ -1,3 +1,4 @@
+'use strict'
 var os = require('os');
 var pty = require('node-pty');
 var Terminal = require('xterm').Terminal;

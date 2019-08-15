@@ -1,16 +1,19 @@
 {
-  "name": "node-pty-electron-example",
-  "version": "1.0.0",
-  "description": "A minimal node-pty Electron example",
+  "name": "cell",
+  "version": "0.1.0",
+  "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron . --ignore-gpu-blacklist"
   },
   "repository": "https://github.com/Tyriar/node-pty",
-  "author": "Tyriar",
+  "author": "Wajdi Halabi",
   "dependencies": {
     "electron": "4.0.1",
     "node-pty": "^0.8.0",
     "xterm": "^3.14.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0"
   }
 }
