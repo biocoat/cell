@@ -4,12 +4,12 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron . --ignore-gpu-blacklist"
+    "start": "electron ."
   },
   "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",
   "dependencies": {
-    "electron": "4.0.1",
+    "electron": "^6.0.11",
     "electron-json-storage": "^4.1.7",
     "graceful-fs": "^4.2.2",
     "node-pty": "^0.8.0",
