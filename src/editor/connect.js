@@ -10,7 +10,7 @@ const ssh = new Ssh();
 //     username: 'whalabi',
 //     password: ''
 // });
-submitBtn.addEventListener('click', (event) => {
+submitBtn.addEventListener('click', (_event) => {
     console.log("Submit clicked")
     const userNameText = document.getElementById('username').value;
     const hostnameText = document.getElementById('hostname').value;
@@ -26,7 +26,7 @@ submitBtn.addEventListener('click', (event) => {
 
 });
 
-pathBtn.addEventListener('click', (event)=>{
+pathBtn.addEventListener('click', (_event)=>{
     console.log("path clicked");
     const pathtext = document.getElementById('pathText').value;
     ssh.readDir(pathtext).then((dir)=> {
