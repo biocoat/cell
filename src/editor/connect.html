@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="./../../assets/bootstrap.min.css">
+</head>
+
+<body>
+    Username: <input type="text" id="username"></input><br>
+    Hostname: <input type="text" id="hostname"></input><br>
+    Password: <input type="password" id="password"></input><br>
+
+    <button id='submitSsh'> Connect</button><br><br>
+
+    directory <input type="text" id="pathText"></input>
+    <button id='pathBtn'>Submit Path</button>
+    <div>
+        <table class="table table-striped" id="table-body">
+            <thead>
+                <tr>
+                    <th scoope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">isDirectory</th>
+                </tr>
+            </thead>
+            <tbody >
+
+            </tbody>
+        </table>
+    </div>
+</body>
+<script src='connect.js'></script>
+
+</html>

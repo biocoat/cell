@@ -4,7 +4,7 @@ var pty = require('node-pty');
 var Terminal = require('xterm').Terminal;
 
 // Initialize node-pty with an appropriate shell
-const shell = process.env[os.platform() === 'win32' ? 'COMSPEC' : 'SHELL'];
+const shell = process.env[os.platform() === 'win32' ? 'powershell.exe' : 'SHELL'];
 const ptyProcess = pty.spawn(shell, [], {
   name: 'xterm-color',
   cols: 80,
