@@ -1,37 +1,15 @@
 var Client = require('ssh2').Client;
 
-// var conn = new Client();
-
-// conn.on('ready', function () {
-//     console.log('Client :: ready');
-//     conn.sftp(function (err, sftp) {
-//         if (err) throw err;
-//         sftp.readdir('/home/whalabi/212', function (err, list) {
-//             if (err) throw err;
-//             console.dir(list);
-//             conn.end();
-//         });
-//     });
-// })
-
 module.exports = class Ssh {
    constructor() {
       this.username = '';
       this.conn = new Client()
    }
 
-   /*
-       Public: return this.username
-       args: None
-       returns string
-   */
    getUserName() {
       return this.username;
    }
 
-   /*
-   Public: ends the connection
-   */
    close() {
       this.conn.end();
    }
@@ -80,10 +58,3 @@ module.exports = class Ssh {
 //         });
 //     });
 // })
-
-// conn.connect({
-//     host: 'access1.computing.clemson.edu',
-//     port: 22,
-//     username: 'whalabi',
-//     password: ''
-// });
