@@ -53,3 +53,7 @@ advisor and her support of this project
 Clemson University is acknowledged for generous allotment of compute time on Palmetto cluster.
 
 This is a part of an independent study course at Clemson University
+
+License
+---
+[MIT](https://github.com/joehal9000/cell/blob/master/LICENSE)
