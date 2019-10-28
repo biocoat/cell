@@ -1,8 +1,15 @@
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
-// const CellGlobal = require('./cell-global');
+const CellGlobal = require('./cell-global');
 
+const {ipcMain} = require('electron')
+/*
+
+ipcMain.on('synchronous-message', (event, arg) => {
+  event.returnValue = 'pong'
+})
+*/
 
 const Window = require('./lib/window');
 // Keep a global reference of the window object, if you don't, the window will
@@ -58,6 +65,13 @@ app.on('activate', function () {
     createWindow()
   }
 })
+
+ipcMain.on('ssh-login', (event, arg) => {
+  console.log("Message receieved");
+  // console.log(arg);
+  event.returnValue = CellGlobal.ssh.connect(arg);
+  console.log(event.returnValue);
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

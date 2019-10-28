@@ -20,9 +20,20 @@ module.exports = class Ssh {
                Json with username, hostname, and authentication methods
    */
    connect(config) {
-      this.username = config.username;
       console.log(config);
-      this.conn.connect(config);
+      this.username = config.username;
+      return new Promise((resolve, reject) => {
+         try{
+            this.conn.connect(config);
+            resolve({"sucess":1});
+         }
+         catch(e){
+            console.log(e);
+            reject({"success":0, "error":e});
+         }
+         
+      })
+      // console.log(config);
    }
    /*
    public: reads the contents of the path Path
