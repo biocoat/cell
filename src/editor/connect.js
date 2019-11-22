@@ -20,9 +20,9 @@ submitBtn.addEventListener('click', (event) => {
         'host': hostnameText,
         'port': 22,
         'username': userNameText,
-        'password': passwordText
+
     }
-    ssh.connect(config);
+    ssh.connect(config, passwordText);
 
 });
 

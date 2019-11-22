@@ -1,6 +1,7 @@
 module.exports = {
     "env": {
         "browser": true,
+        "node": true,
         "commonjs": true,
         "es6": true
     },
@@ -13,5 +14,7 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
+       "no-unused-vars" : 1,
+       "no-extra-semi" : 0
     }
 };

@@ -1,3 +1,4 @@
+'use strict'
 var Client = require('ssh2').Client;
 
 // var conn = new Client();
@@ -17,8 +18,25 @@ var Client = require('ssh2').Client;
 module.exports = class Ssh {
     constructor() {
         this.username = '';
-        this.conn = new Client()
+        var conn = this.conn = new Client();
+        this.conn.on('error', function(error){
+            console.log(error);
+        })
 
+        conn.on('ready', function() {
+            console.log('Client :: ready');
+            // conn.sftp(function(err, sftp) {
+            //   if (err) throw err;
+            //   sftp.readdir('$', function(err, list) {
+            //     if (err) throw err;
+            //     console.dir(list);
+            //     conn.end();
+            //   });
+            // });
+          })
+
+
+        // this.conn
 
     }
 
@@ -35,7 +53,7 @@ module.exports = class Ssh {
     Public: ends the connection
     */
     close() {
-        conn.end();
+        this.conn.end();
     }
 
     /*
@@ -43,8 +61,20 @@ module.exports = class Ssh {
         args: config
                 Json with username, hostname, and authentication methods
     */
-    connect(config) {
+    connect(config,pass) {
+        config['tryKeyboard'] = true;
+
         this.username = config.username;
+
+        this.conn.on('keyboard-interactive', function(name, instructions, instructionsLang, prompts, finish){
+            console.log('Connection :: keyboard-interactive');
+            console.log(prompts);
+            if(prompts[0].prompt.toLocaleLowerCase().includes('password')){
+                finish([pass]);
+            }else{
+                finish(["1"]);
+            }
+        });
         console.log(config);
         this.conn.connect(config);
     };
