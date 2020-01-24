@@ -4,12 +4,7 @@ const submitBtn = document.getElementById('submitSsh');
 const pathBtn = document.getElementById('pathBtn');
 const ssh = new Ssh();
 
-// conn.connect({
-//     host: 'access1.computing.clemson.edu',
-//     port: 22,
-//     username: 'whalabi',
-//     password: ''
-// });
+
 submitBtn.addEventListener('click', (event) => {
     console.log("Submit clicked")
     const userNameText = document.getElementById('username').value;

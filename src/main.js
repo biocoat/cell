@@ -8,6 +8,8 @@ const Window = require('./lib/window');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+// let modal = new Modal();
+
 function createWindow () {
 
   let mainWindow = new Window({

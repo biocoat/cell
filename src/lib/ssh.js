@@ -1,50 +1,33 @@
 'use strict'
 var Client = require('ssh2').Client;
+var logger = require('../logger');
 
 // var conn = new Client();
 
-// conn.on('ready', function () {
-//     console.log('Client :: ready');
-//     conn.sftp(function (err, sftp) {
-//         if (err) throw err;
-//         sftp.readdir('/home/whalabi/212', function (err, list) {
-//             if (err) throw err;
-//             console.dir(list);
-//             conn.end();
-//         });
-//     });
-// })
 
 module.exports = class Ssh {
     constructor() {
         this.username = '';
         var conn = this.conn = new Client();
-        this.conn.on('error', function(error){
-            console.log(error);
+        this.conn.on('error', function (error) {
+            logger.error("SSH fired error " + error);
         })
 
-        conn.on('ready', function() {
-            console.log('Client :: ready');
-            // conn.sftp(function(err, sftp) {
-            //   if (err) throw err;
-            //   sftp.readdir('$', function(err, list) {
-            //     if (err) throw err;
-            //     console.dir(list);
-            //     conn.end();
-            //   });
-            // });
-          })
+        // conn.on('ready', function() {
+        //     logger.info("SSH Client :: ready");
 
-
-        // this.conn
-
+        // //TODO fix so only keyboard is ever used
+        //     // conn.sftp(function(err, sftp) {
+        //     //   if (err) throw err;
+        //     //   sftp.readdir('$', function(err, list) {
+        //     //     if (err) throw err;
+        //     //     console.dir(list);
+        //     //     conn.end();
+        //     //   });
+        //     // });
+        //   })
     }
 
-    /*
-        Public: return this.username
-        args: None
-        returns string
-    */
     getUserName() {
         return this.username;
     }
@@ -61,17 +44,95 @@ module.exports = class Ssh {
         args: config
                 Json with username, hostname, and authentication methods
     */
-    connect(config,pass) {
-        config['tryKeyboard'] = true;
 
-        this.username = config.username;
+    //Requires modal to be passed in.
+    logIn(modal) {
+        //modal.setSubmitAction
+        var config = {
+            'tryKeyboard': true,
+        }
+        var conn = this.conn;
+        conn.on('ready', function () {
+            logger.info("SSH Client :: ready");
+            modal.hide();
+        });
 
-        this.conn.on('keyboard-interactive', function(name, instructions, instructionsLang, prompts, finish){
+        //The functions start with username and call upwars.
+
+        //******NOTE finish requires a list ******
+        conn.on('keyboard-interactive', function (name, instructions, instructionsLang, prompts, finish) {
+            logger.info("Keyboard-interactive ssh begin");
+            logger.info(prompts);
+            //Set enter to do something??
+            if(prompts[0].prompt.toLocaleLowerCase().includes('password')){
+                finish([config['password']]);
+            }
+
+            // modal.setTypePassword();
+
+            var nextPrompt = function(res){
+                finish([res]);
+            }
+
+            modal.setSubmitCallback(nextPrompt);
+            modal.setPlaceholder(prompts[0].prompt);
+        });
+
+
+        var inputPassword = function(password){
+            config['password'] = password;
+            
+            conn.connect(config)
+        }
+
+        var inputHostName = function(host){
+            config['host'] =host;
+            modal.setPlaceholder("connecting");
+            logger.info(config);
+            modal.setSubmitCallback(inputPassword);
+            modal.setPlaceholder("password");
+            // modal.setSubmitCallback();
+        }
+
+        var inputUsername = function(username){
+            config['username'] = username;
+            logger.info("inputusername fired");
+            modal.setSubmitCallback(inputHostName);
+            modal.setPlaceholder("Enter server address...(login.palmetto.clemson.edu)");
+
+        }
+
+        //Get username
+        modal.display("Enter username...");
+        
+        modal.setSubmitCallback(inputUsername)
+        // modal.submit(function(username,args){
+            
+        //     logger.info(username);
+        //     args['argconfig']['username'] = username;
+        //     //Callback to get host
+        //     modal.setPlaceholder("Enter server address...(login.palmetto.clemson.edu)");
+        //     // modal.setPlaceholder("connecting");
+        //     // config['host'] = 'login.palmetto.clemson.edu';
+        //     // conn.connect(config);
+        //     modal.submit(function(host,args){
+        //         args['argconfig']['host'] = host;
+        //         modal.setPlaceholder("connecting...")
+        //         logger.warn(args['argconfig']);
+        //         args['argconn'].connect(args['argconfig']);
+        //     },args);
+        // }, {'argconn':this.conn,'argconfig':config });        
+
+
+    }
+
+    connect(config, pass) {
+        this.conn.on('keyboard-interactive', function (name, instructions, instructionsLang, prompts, finish) {
             console.log('Connection :: keyboard-interactive');
             console.log(prompts);
-            if(prompts[0].prompt.toLocaleLowerCase().includes('password')){
+            if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
                 finish([pass]);
-            }else{
+            } else {
                 finish(["1"]);
             }
         });
@@ -89,7 +150,9 @@ module.exports = class Ssh {
             this.conn.sftp(function (err, sftp) {
                 if (err) reject(err);
                 sftp.readdir(path, function (err, list) {
-                    if (err) {reject(err);}
+                    if (err) {
+                        reject(err);
+                    }
                     resolve(list);
                 })
             })

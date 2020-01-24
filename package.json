@@ -10,6 +10,8 @@
   "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",
   "dependencies": {
+    "bulma": "^0.8.0",
+    "bunyan": "^1.8.12",
     "electron": "^6.0.11",
     "electron-json-storage": "^4.1.7",
     "graceful-fs": "^4.2.2",
@@ -18,7 +20,6 @@
   },
   "devDependencies": {
     "electron-rebuild": "^1.8.6",
-    "eslint": "^6.1.0",
-    "node-pty": "^0.8.1"
+    "eslint": "^6.1.0"
   }
 }
