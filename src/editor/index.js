@@ -12,9 +12,9 @@ const newWindowBtn = document.getElementById('new-window');
 const sshBtn = document.getElementById('sshBtn');
 // const modal = document.getElementById('myModal');
 
-const modal = new Modal(document.getElementById('myModal'), document.getElementById('modalinput'));
 const ssh = new Ssh();
-
+console.log(global);
+global.cellApp.modal.bind(document.getElementById('myModal'), document.getElementById('modalinput'));
 
 newWindowBtn.addEventListener('click', (event) => {
   const modalPath = path.join('file://', __dirname, './connect.html')
@@ -45,7 +45,7 @@ newWindowBtn.addEventListener('click', (event) => {
 
 sshBtn.addEventListener('click', (event) => {
   // modal.style.display = "block";
-  ssh.logIn(modal);
+  ssh.logIn(global.cellApp.modal);
   // modal.display();
   // const modalPath = path.join('file://', __dirname, 'cmdpalette.html');
   // let win = new BrowserWindow({
@@ -61,6 +61,6 @@ sshBtn.addEventListener('click', (event) => {
 window.onclick = function (event) {
   if (event.target == document.getElementById('myModal')) {
     // modal.style.display = "none";
-    modal.hide();
+    global.cellApp.modal.hide();
   }
 }

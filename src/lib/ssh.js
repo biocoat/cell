@@ -46,6 +46,7 @@ module.exports = class Ssh {
     */
 
     //Requires modal to be passed in.
+    //TODO add incorrect password checking
     logIn(modal) {
         //modal.setSubmitAction
         var config = {
@@ -57,7 +58,8 @@ module.exports = class Ssh {
             modal.hide();
         });
 
-        //The functions start with username and call upwars.
+        //The functions start with username and call upwards.. Basic call back functions, it was just
+        //getting to be a lot
 
         //******NOTE finish requires a list ******
         conn.on('keyboard-interactive', function (name, instructions, instructionsLang, prompts, finish) {
@@ -68,13 +70,9 @@ module.exports = class Ssh {
                 finish([config['password']]);
             }
 
-            // modal.setTypePassword();
-
-            var nextPrompt = function(res){
+            modal.setSubmitCallback(function(res){
                 finish([res]);
-            }
-
-            modal.setSubmitCallback(nextPrompt);
+            });
             modal.setPlaceholder(prompts[0].prompt);
         });
 
@@ -106,24 +104,6 @@ module.exports = class Ssh {
         modal.display("Enter username...");
         
         modal.setSubmitCallback(inputUsername)
-        // modal.submit(function(username,args){
-            
-        //     logger.info(username);
-        //     args['argconfig']['username'] = username;
-        //     //Callback to get host
-        //     modal.setPlaceholder("Enter server address...(login.palmetto.clemson.edu)");
-        //     // modal.setPlaceholder("connecting");
-        //     // config['host'] = 'login.palmetto.clemson.edu';
-        //     // conn.connect(config);
-        //     modal.submit(function(host,args){
-        //         args['argconfig']['host'] = host;
-        //         modal.setPlaceholder("connecting...")
-        //         logger.warn(args['argconfig']);
-        //         args['argconn'].connect(args['argconfig']);
-        //     },args);
-        // }, {'argconn':this.conn,'argconfig':config });        
-
-
     }
 
     connect(config, pass) {

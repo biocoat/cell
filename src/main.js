@@ -1,6 +1,10 @@
 const electron = require('electron')
+// const {Menu, MenuItem} = require('electron')
 // Module to control application life.
 const app = electron.app
+const CellMenu = require('./menu');
+const CellApplication = require("./cellApplication");
+// const menu = new Menu();
 
 
 const Window = require('./lib/window');
@@ -8,7 +12,16 @@ const Window = require('./lib/window');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+var cellApp = new CellApplication();
 // let modal = new Modal();
+
+function init(){
+  var cellMenu = new CellMenu();
+  cellMenu.initMenu();
+  console.log(global);
+  createWindow();
+}
+
 
 function createWindow () {
 
@@ -16,6 +29,7 @@ function createWindow () {
     file: 'src/editor/index.html'
   });
 
+  
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -31,7 +45,7 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', init)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -53,3 +67,5 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+

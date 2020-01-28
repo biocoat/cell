@@ -1,0 +1,10 @@
+{
+    "label": "File",
+    "submenu": [
+        {
+        "label": "Modal",
+        "accelerator": "CmdOrCtrl+Shift+P",
+        "click" : ""
+        }
+    ]
+}

@@ -8,15 +8,35 @@ module.exports = class Modal {
         this.isVisible = false;
         this.submitCallback = null;
 
+        //if  defined,  run the rest
+        if(modal){
+            this.setupEventListener();
+        }
+            
+    }
+
+    bind(modal, textbox){
+        this.modal = modal;
+        this.textbox = textbox;
+        this.setupEventListener();
+
+    }
+
+    setupEventListener(){
         const modalClass = this;
         this.textbox.addEventListener("keyup", function (event) {
             if (event.code == "Enter") {
                 //referneces a local variable which resolved to the class
+                if (modalClass.submitCallback == null) return;
                 modalClass.submitCallback(this.value);
 
             }
+            else{
+                if(event.code == "Escape"){
+                    modalClass.hide();
+                }
+            }
         })
-
     }
 
 
@@ -50,6 +70,7 @@ module.exports = class Modal {
     hide() {
         this.modal.style.display = "none";
         // this.submit = null;
+        this.submitCallback = null;
         this.setTypeText();
 
         this.isVisible = false;

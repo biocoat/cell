@@ -1,27 +1,4 @@
 <!DOCTYPE html>
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Cell</title>
-    <link rel="Stylesheet" href="../../node_modules/xterm/lib/xterm.css">
-    <link rel="Stylesheet" href="style.css">
-
-  </head>
-  <body>
-    <div style="width:inherit; height:500px;">
-      <div class="main-editor" id ="editor">
-
-      </div>
-    </div>
-    
-    <div id="xterm"></div>
-  </body>
-  <script>
-    require('./editor.js')
-    require('./renderer.js')
-  </script>
-</html> -->
 
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,19 +8,28 @@
   <link rel="Stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <style>
+    .mycolumn {
+      max-width: 20%;
+      border: 2px solid black;
+    }
+  </style>
 </head>
 
 <body>
-  Hello World<br>
-  <button class="button">Button</button><br>
+  <div class="mycolumn">
+    First Column
+  </div>
+  <div class="mycolumn">
 
-  <button class="demo-button" id="new-window">View Demo</button><br>
-  <button class="button" id="sshBtn">Log in with ssh</button>
+    <button class="demo-button" id="new-window">View Demo</button>
+    <button class="button" id="sshBtn">Log in with ssh</button>
+  </div>
   <!-- The Modal -->
   <div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
-      <input class="input" id="modalinput" type="text" placeholder="" >
+      <input class="input is-rounded" id="modalinput" type="text" placeholder="">
     </div>
   </div>
 
