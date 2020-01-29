@@ -11,6 +11,7 @@ module.exports = class Ssh {
     constructor() {
         this.username = '';
         var conn = this.conn = new Client();
+        this.status = "NONE";
         this.conn.on('error', function (error) {
             logger.error("SSH fired error " + error);
         })
@@ -49,15 +50,20 @@ module.exports = class Ssh {
 
     //Requires modal to be passed in.
     //TODO add incorrect password checking
-    logIn(modal) {
+    logIn(modal, callback) {
         //modal.setSubmitAction
         var config = {
             'tryKeyboard': true,
+            'username': ''
         }
+        var ssh = this;
         var conn = this.conn;
         conn.on('ready', function () {
+            if (ssh.status == "READY") return; //catch multiple ready signals
+            ssh.status = "READY"
             logger.info("SSH Client :: ready");
             modal.hide();
+            callback(null);
         });
 
         //The functions start with username and call upwards.. Basic call back functions, it was just
@@ -68,25 +74,25 @@ module.exports = class Ssh {
             logger.info("Keyboard-interactive ssh begin");
             logger.info(prompts);
             //Set enter to do something??
-            if(prompts[0].prompt.toLocaleLowerCase().includes('password')){
+            if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
                 finish([config['password']]);
             }
 
-            modal.setSubmitCallback(function(res){
+            modal.setSubmitCallback(function (res) {
                 finish([res]);
             });
             modal.setPlaceholder(prompts[0].prompt);
         });
 
 
-        var inputPassword = function(password){
+        var inputPassword = function (password) {
             config['password'] = password;
-            
+
             conn.connect(config)
         }
 
-        var inputHostName = function(host){
-            config['host'] =host;
+        var inputHostName = function (host) {
+            config['host'] = host;
             modal.setPlaceholder("connecting");
             logger.info(config);
             modal.setSubmitCallback(inputPassword);
@@ -94,8 +100,9 @@ module.exports = class Ssh {
             // modal.setSubmitCallback();
         }
 
-        var inputUsername = function(username){
+        var inputUsername = function (username) {
             config['username'] = username;
+            ssh.username = username;
             logger.info("inputusername fired");
             modal.setSubmitCallback(inputHostName);
             modal.setPlaceholder("Enter server address...(login.palmetto.clemson.edu)");
@@ -103,7 +110,7 @@ module.exports = class Ssh {
         }
 
         //Get username
-        modal.display("Enter username..."); 
+        modal.display("Enter username...");
         modal.setSubmitCallback(inputUsername)
     }
 
@@ -127,19 +134,42 @@ module.exports = class Ssh {
         requires that conn works
     */
     readDir(path) {
+        var sortDir = function(a,b){
+            const nameA = a.filename.toUpperCase();
+            const nameB = b.filename.toUpperCase();
+            let comp = 0;
+            if (nameA > nameB) comp = 1;
+            else if (nameA < nameB) comp = -1;
+            return comp;
+        };
+
+        var user = this.username;
+        console.log(user);
         return new Promise((resolve, reject) => {
             this.conn.sftp(function (err, sftp) {
                 if (err) reject(err);
+                path = path.replace("~", "/home/" + user);
+                console.log(path);
                 sftp.readdir(path, function (err, list) {
                     if (err) {
                         reject(err);
                     }
-                    resolve(list);
+                    console.log(path);
+
+                    list.sort(sortDir);
+
+                    resolve({
+                        "path": path,
+                        "username": user,
+                        "dir": list
+                    });
                 })
             })
         })
     };
 }
+
+
 // conn.on('ready', function () {
 //     console.log('Client :: ready');
 //     conn.exec('ls ~', function (err, stream) {
@@ -154,4 +184,3 @@ module.exports = class Ssh {
 //         });
 //     });
 // })
-

@@ -4,34 +4,20 @@ const {
 } = require('electron').remote
 const path = require('path')
 // const Modal = require('./../lib/modal.js');
-const Ssh = require('../lib/Ssh')
+const Ssh = require('../lib/Ssh');
+const FileExplorer = require('../lib/fileExplorer')
 
 
 
-const newWindowBtn = document.getElementById('new-window');
 const sshBtn = document.getElementById('sshBtn');
 // const modal = document.getElementById('myModal');
 
 const ssh = new Ssh();
+const fileEx = new FileExplorer();
 console.log(global);
 var modal = document.getElementById('myModal');
 
-newWindowBtn.addEventListener('click', (event) => {
-  const modalPath = path.join('file://', __dirname, './connect.html')
-  let win = new BrowserWindow({
-    width: 400,
-    height: 320,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
 
-  win.on('close', () => {
-    win = null
-  })
-  win.loadURL(modalPath)
-  win.show()
-})
 
 
 
@@ -46,7 +32,19 @@ newWindowBtn.addEventListener('click', (event) => {
 sshBtn.addEventListener('click', (event) => {
   // modal.style.display = "block";
   
-  ssh.logIn(modal);
+  ssh.logIn(modal, function(error){
+    if(error){
+      console.log("SSH error " + error);
+      return;
+    }
+    ssh.readDir("~").then((res)=>{
+      console.log(path);
+      fileEx.setUsername(res['username'])
+      fileEx.update(res["path"],res["dir"]);
+      
+    });
+
+  });
   // modal.display();
   // const modalPath = path.join('file://', __dirname, 'cmdpalette.html');
   // let win = new BrowserWindow({
