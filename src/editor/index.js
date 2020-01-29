@@ -3,7 +3,7 @@ const {
   BrowserWindow
 } = require('electron').remote
 const path = require('path')
-const Modal = require('./../lib/modal.js');
+// const Modal = require('./../lib/modal.js');
 const Ssh = require('../lib/Ssh')
 
 
@@ -14,7 +14,7 @@ const sshBtn = document.getElementById('sshBtn');
 
 const ssh = new Ssh();
 console.log(global);
-global.cellApp.modal.bind(document.getElementById('myModal'), document.getElementById('modalinput'));
+var modal = document.getElementById('myModal');
 
 newWindowBtn.addEventListener('click', (event) => {
   const modalPath = path.join('file://', __dirname, './connect.html')
@@ -45,7 +45,8 @@ newWindowBtn.addEventListener('click', (event) => {
 
 sshBtn.addEventListener('click', (event) => {
   // modal.style.display = "block";
-  ssh.logIn(global.cellApp.modal);
+  console.log(modal);
+  ssh.logIn(modal);
   // modal.display();
   // const modalPath = path.join('file://', __dirname, 'cmdpalette.html');
   // let win = new BrowserWindow({
@@ -61,6 +62,6 @@ sshBtn.addEventListener('click', (event) => {
 window.onclick = function (event) {
   if (event.target == document.getElementById('myModal')) {
     // modal.style.display = "none";
-    global.cellApp.modal.hide();
+    modal.hide();
   }
 }

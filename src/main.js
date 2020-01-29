@@ -4,6 +4,7 @@ const electron = require('electron')
 const app = electron.app
 const CellMenu = require('./menu');
 const CellApplication = require("./cellApplication");
+
 // const menu = new Menu();
 
 
@@ -14,11 +15,12 @@ let mainWindow;
 
 var cellApp = new CellApplication();
 // let modal = new Modal();
+console.log(process.versions);
 
 function init(){
   var cellMenu = new CellMenu();
   cellMenu.initMenu();
-  console.log(global);
+  // console.log(global);
   createWindow();
 }
 

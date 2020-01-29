@@ -101,6 +101,7 @@ module.exports = class Ssh {
         }
 
         //Get username
+        console.log(modal);
         modal.display("Enter username...");
         
         modal.setSubmitCallback(inputUsername)
