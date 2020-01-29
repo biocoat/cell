@@ -1,7 +1,7 @@
 'use strict'
 var Client = require('ssh2').Client;
 var logger = require('../logger');
-
+const {CompositeDisposable, Emitter} = require('event-kit');
 // var conn = new Client();
 
 //Ssh needs to move to main. Work via IPC
@@ -15,6 +15,24 @@ module.exports = class Ssh {
         this.conn.on('error', function (error) {
             logger.error("SSH fired error " + error);
         })
+
+        this.emitter = new Emitter();
+
+        this.emitter.on('ssh-path-change', (event, path) => {
+            logger.info("ssh-path-change rec")
+            this.readDir(path).then((res) => {
+                event.sender.send('ssh-path-OK', res);
+            });
+        })
+        
+        // const pathChangeSub = this.onPathChange((path) => {
+        //     this.readDir(path).then((res)=>{
+
+        //     });
+        // })
+
+        
+        //initialize change path listener
 
         // conn.on('ready', function() {
         //     logger.info("SSH Client :: ready");
@@ -127,6 +145,9 @@ module.exports = class Ssh {
         console.log(config);
         this.conn.connect(config);
     };
+
+
+
     /*
     public: reads the contents of the path Path 
         Returns a Promise
@@ -167,20 +188,9 @@ module.exports = class Ssh {
             })
         })
     };
+
+
+
 }
 
 
-// conn.on('ready', function () {
-//     console.log('Client :: ready');
-//     conn.exec('ls ~', function (err, stream) {
-//         if (err) throw err;
-//         stream.on('close', function (code, signal) {
-//             console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
-//             conn.end();
-//         }).on('data',  function (data) {
-//             console.log('STDOUT: ' + data);
-//         }).stderr.on('data', function (data) {
-//             console.log('STDERR: ' + data);
-//         });
-//     });
-// })

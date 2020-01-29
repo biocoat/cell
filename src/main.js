@@ -1,26 +1,29 @@
 const electron = require('electron')
-// const {Menu, MenuItem} = require('electron')
-// Module to control application life.
+
 const app = electron.app
+
 const CellMenu = require('./menu');
 const CellApplication = require("./cellApplication");
-
-// const menu = new Menu();
-
-
 const Window = require('./lib/window');
+const logger = require('./logger');
+
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-var cellApp = new CellApplication();
+let cellApp = new CellApplication();
+
+
 // let modal = new Modal();
-console.log(process.versions);
 
 function init(){
   var cellMenu = new CellMenu();
   cellMenu.initMenu();
-  // console.log(global);
+
+  
+
   createWindow();
 }
 
@@ -30,10 +33,6 @@ function createWindow () {
   let mainWindow = new Window({
     file: 'src/editor/index.html'
   });
-
-  
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

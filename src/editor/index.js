@@ -1,12 +1,12 @@
 'use strict'
-const {
-  BrowserWindow
-} = require('electron').remote
+
 const path = require('path')
+const {ipcRenderer} = require('electron');
+const IPC = require("../lib/ipc");
+
 // const Modal = require('./../lib/modal.js');
 const Ssh = require('../lib/Ssh');
 const FileExplorer = require('../lib/fileExplorer')
-
 
 
 const sshBtn = document.getElementById('sshBtn');
@@ -16,9 +16,15 @@ const ssh = new Ssh();
 const fileEx = new FileExplorer();
 console.log(global);
 var modal = document.getElementById('myModal');
+/*
+ipcRenderer.on("main-cmd-reply",(event, arg)=>{
+  console.log(arg);
+});
 
+ipcRenderer.send("main-cmd-async", "Hello There");
+*/
 
-
+console.log(IPC.call('HelloThere'));
 
 
 // function textSubmit(e) {
@@ -29,7 +35,7 @@ var modal = document.getElementById('myModal');
 //   }
 // }
 
-sshBtn.addEventListener('click', (event) => {
+sshBtn.addEventListener('click', () => {
   // modal.style.display = "block";
   
   ssh.logIn(modal, function(error){

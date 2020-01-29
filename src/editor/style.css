@@ -1,12 +1,15 @@
-html,body{
+html,
+body {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .mycolumn {
   max-width: 20%;
   border: 2px solid black;
-  height: inherit;
+  height: 100%;
+  padding-bottom: 5%;
 }
 
 
@@ -15,23 +18,32 @@ The modal
 */
 /* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 100px;
+  /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+}
 
-  
-  /* Modal Content */
 
-.modal-element{
+/* Modal Content */
+
+.modal-element {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -43,39 +55,56 @@ The modal
 
 }
 
-.modal-element:focus{
+.modal-element:focus {
   outline: green;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-  }
-  
-  /* The Close Button */
-  .modal-input{
-    display: inherit;
-    width: 100%;
-    
-  }  
-  .close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
 
-  /* SSH command buttons */
-  .button.ssh{
-    color: greenyellow;
-  }
+/* The Close Button */
+.modal-input {
+  display: inherit;
+  width: 100%;
+
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* SSH command */
+.button.ssh {
+  color: greenyellow;
+}
+
+/* file explorer */
+.fs {
+  overflow-y: scroll;
+  height: inherit;
+  padding: 3%;
+}
+
+.fs-element.dir{
+  color: rgb(14, 55, 240);
+}
+
+.fs-element.dir:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}

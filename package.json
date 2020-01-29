@@ -14,6 +14,7 @@
     "bunyan": "^1.8.12",
     "electron": "^6.0.11",
     "electron-json-storage": "^4.1.7",
+    "event-kit": "^2.5.3",
     "graceful-fs": "^4.2.2",
     "ssh2": "^0.8.5",
     "xterm": "^3.14.0"
