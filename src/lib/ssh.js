@@ -4,6 +4,8 @@ var logger = require('../logger');
 
 // var conn = new Client();
 
+//Ssh needs to move to main. Work via IPC
+//Why?: Becuse right now, SSH obj only exists in this window
 
 module.exports = class Ssh {
     constructor() {
@@ -101,9 +103,7 @@ module.exports = class Ssh {
         }
 
         //Get username
-        console.log(modal);
-        modal.display("Enter username...");
-        
+        modal.display("Enter username..."); 
         modal.setSubmitCallback(inputUsername)
     }
 
@@ -155,14 +155,3 @@ module.exports = class Ssh {
 //     });
 // })
 
-
-
-
-
-
-// conn.connect({
-//     host: 'access1.computing.clemson.edu',
-//     port: 22,
-//     username: 'whalabi',
-//     password: ''
-// });

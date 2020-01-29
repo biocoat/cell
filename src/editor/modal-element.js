@@ -16,6 +16,9 @@ template.innerHTML = `
 class ModalElement extends HTMLInputElement {
     constructor(){
         super();
+
+        this.setAttribute('class', 'modal-element');
+
         this.isVisible = false;
         this.style.display = "none";
         this.value = "hello there"
@@ -56,12 +59,14 @@ class ModalElement extends HTMLInputElement {
         
         this.isVisible = true;
         this.style.display = "block";
-        //TODO make it visible
-
+        this.focus();
     }
 
     hide(){
         this.style.display = "none";
+        this.submitCallback = () => {
+            console.log("Enter was pressed")
+        };
     }
 }
 

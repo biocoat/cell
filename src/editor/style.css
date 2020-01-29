@@ -25,6 +25,23 @@ The modal
 
   
   /* Modal Content */
+
+.modal-element{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 66%;
+  font-size: larger;
+  top: 50px;
+  z-index: 10;
+  box-shadow: 3px 3px 7px 0px;
+
+}
+
+.modal-element:focus{
+  outline: green;
+}
+
 .modal-content {
     background-color: #fefefe;
     margin: auto;

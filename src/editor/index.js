@@ -45,7 +45,7 @@ newWindowBtn.addEventListener('click', (event) => {
 
 sshBtn.addEventListener('click', (event) => {
   // modal.style.display = "block";
-  console.log(modal);
+  
   ssh.logIn(modal);
   // modal.display();
   // const modalPath = path.join('file://', __dirname, 'cmdpalette.html');
