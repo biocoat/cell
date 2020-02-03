@@ -2,6 +2,8 @@
 var Client = require('ssh2').Client;
 var logger = require('../logger');
 const {CompositeDisposable, Emitter} = require('event-kit');
+const IPC = require("./ipc");
+
 // var conn = new Client();
 
 //Ssh needs to move to main. Work via IPC
@@ -24,6 +26,7 @@ module.exports = class Ssh {
                 event.sender.send('ssh-path-OK', res);
             });
         })
+
         
         // const pathChangeSub = this.onPathChange((path) => {
         //     this.readDir(path).then((res)=>{
@@ -72,8 +75,10 @@ module.exports = class Ssh {
         //modal.setSubmitAction
         var config = {
             'tryKeyboard': true,
-            'username': ''
+            'username': '',
+            'debug' : console.log
         }
+        var password = "";
         var ssh = this;
         var conn = this.conn;
         conn.on('ready', function () {
@@ -93,7 +98,7 @@ module.exports = class Ssh {
             logger.info(prompts);
             //Set enter to do something??
             if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
-                finish([config['password']]);
+                finish([password]);
             }
 
             modal.setSubmitCallback(function (res) {
@@ -103,8 +108,8 @@ module.exports = class Ssh {
         });
 
 
-        var inputPassword = function (password) {
-            config['password'] = password;
+        var inputPassword = function (pass) {
+            // config['password'] = pass;
 
             conn.connect(config)
         }

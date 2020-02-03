@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "rebuild": "electron-rebuild -f -w node-pty",
-    "start": "electron ."
+    "start": "electron . | bunyan"
   },
   "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",

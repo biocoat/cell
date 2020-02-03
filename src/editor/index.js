@@ -24,7 +24,7 @@ ipcRenderer.on("main-cmd-reply",(event, arg)=>{
 ipcRenderer.send("main-cmd-async", "Hello There");
 */
 
-console.log(IPC.call('HelloThere'));
+console.log(IPC.call('HelloThere',"I have the high ground" ));
 
 
 // function textSubmit(e) {
@@ -63,9 +63,9 @@ sshBtn.addEventListener('click', () => {
   // win.show()
 });
 
-window.onclick = function (event) {
-  if (event.target == document.getElementById('myModal')) {
-    // modal.style.display = "none";
-    modal.hide();
-  }
-}
+// window.onclick = function (event) {
+//   if (event.target == document.getElementById('myModal')) {
+//     // modal.style.display = "none";
+//     modal.hide();
+//   }
+// }

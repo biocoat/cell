@@ -1,5 +1,7 @@
 'use strict'
 
+const IPC = require("../lib/ipc");
+ 
 //https://developers.google.com/web/fundamentals/web-components/examples/howto-tabs
 /*
 
@@ -21,7 +23,6 @@ class ModalElement extends HTMLInputElement {
 
         this.isVisible = false;
         this.style.display = "none";
-        this.value = "hello there"
         this.submitCallback = () => {
             console.log("Enter was pressed")
         };
@@ -35,6 +36,8 @@ class ModalElement extends HTMLInputElement {
                 this.hide()
             }
         });
+
+
 
     }
 

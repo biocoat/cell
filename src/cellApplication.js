@@ -43,10 +43,17 @@ module.exports = class CellApplication {
             console.log(IPC.call('HelloThere'));
         */
         this.disposable.add(
-            IPC.on(ipcMain, "HelloThere", () => {
-                logger.info("AH! General Kenobi. A bold one")
+            IPC.on(ipcMain, "HelloThere", (path) => {
+                logger.info("AH! General Kenobi. A bold one " + path)
             })
         );
+        
+
+        // this.disposable.add(
+        //     IPC.respondTo('modal-interact', () = > {
+                
+        //     })
+        // );
 
         this.disposable.add(
             IPC.on(ipcMain, "ssh-path-switch", (event, responseChannel) => {
