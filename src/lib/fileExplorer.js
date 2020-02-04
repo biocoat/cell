@@ -2,26 +2,44 @@
 const {
     Emitter
 } = require('event-kit');
+const EventEmitter = require('events');
+const Ssh = require('../lib/Ssh');
+const IPC = require('../lib/ipc');
 
-module.exports = class FileExplorer {
+module.exports = class FileExplorer extends EventEmitter {
     constructor(showHidden = false) {
+        super();
+        
         this.username;
         this.currentDirectory;
         this.showHidden = showHidden;
 
-        this.emitter = new Emitter();
+        // this.emitter = new Emitter();
 
-        this.emitter.on('ssh-path-change', () => {
-            console.log("I have the high ground")
-        })
+        // this.emitter.on('ssh-path-change', () => {
+        //     console.log("I have the high ground")
+        // })
+
+        this.ssh = new Ssh();
 
 
 
     }
 
     run_ls(path){
-        console.log(this);
-        this.update(path, this.emitter.emit('ssh-path-change', path));
+        var fe = this;
+        console.log(path);
+        this.emit("fileExplorer-loading");
+        this.ssh.readDir(path).then((res)=>{
+            // fe.setUsername(res['username']);
+            fe.update(res["path"], res["dir"]);
+
+        }).catch((error) => {
+            console.log(error);
+        })
+
+        // console.log(this);
+        // this.update(path, this.emitter.emit('ssh-path-change', path));
     }
 
     update(path, dirList) {
@@ -49,7 +67,9 @@ module.exports = class FileExplorer {
         var parentRow = table.insertRow(0)
         parentRow.setAttribute('class', 'fs-element dir')
         parentRow.addEventListener('click', () => {
-            console.log("..")
+            if(path === "/") return;
+            
+            fe.run_ls(path.substring(0,path.lastIndexOf("/")));
         })
         parentRow.innerHTML = "..";
         
@@ -67,17 +87,16 @@ module.exports = class FileExplorer {
                 row.setAttribute('class', 'fs-element dir');
                 row.addEventListener('click', () => {
                     console.log(name);
-
+                    row.cells[0].innerHTML = '<i class="fa fa-spinner fa-spin">' + name + '</i>';  
                     fe.run_ls(path + "/" + name);
                 });
             }
         })
 
         div.appendChild(table);
+        this.emit("fileExplorer-done");
+
     }
-
-
-
 
     setUsername(username) {
         this.username = username;
@@ -87,6 +106,22 @@ module.exports = class FileExplorer {
     //emit event, and 
     refresh() {
         this.run_ls(this.currentDirectory);
+    }
+
+    
+    init(modal){
+        var fe = this;
+        fe.ssh.logIn(modal, function(error, username){
+            if(error){
+                console.log("SSH error " + error);
+                return;
+
+            }
+            fe.username = username;
+            fe.run_ls("/home/" + username);
+            
+        });
+
     }
 
 

@@ -20,13 +20,11 @@ class ModalElement extends HTMLInputElement {
         super();
 
         this.setAttribute('class', 'modal-element');
-
         this.isVisible = false;
         this.style.display = "none";
         this.submitCallback = () => {
             console.log("Enter was pressed")
         };
-
 
         this.addEventListener("keyup", function(event){
             if(event.code == "Enter"){
@@ -36,8 +34,6 @@ class ModalElement extends HTMLInputElement {
                 this.hide()
             }
         });
-
-
 
     }
 
@@ -74,5 +70,3 @@ class ModalElement extends HTMLInputElement {
 }
 
 customElements.define('modal-box',ModalElement, {extends: 'input'});
-
-

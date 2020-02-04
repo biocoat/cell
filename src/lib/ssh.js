@@ -1,7 +1,10 @@
 'use strict'
 var Client = require('ssh2').Client;
 var logger = require('../logger');
-const {CompositeDisposable, Emitter} = require('event-kit');
+const {
+    CompositeDisposable,
+    Emitter
+} = require('event-kit');
 const IPC = require("./ipc");
 
 // var conn = new Client();
@@ -27,14 +30,16 @@ module.exports = class Ssh {
             });
         })
 
-        
+        this.sftp = null;
+
+
         // const pathChangeSub = this.onPathChange((path) => {
         //     this.readDir(path).then((res)=>{
 
         //     });
         // })
 
-        
+
         //initialize change path listener
 
         // conn.on('ready', function() {
@@ -75,8 +80,8 @@ module.exports = class Ssh {
         //modal.setSubmitAction
         var config = {
             'tryKeyboard': true,
-            'username': '',
-            'debug' : console.log
+            'username': ''
+            // 'debug' : console.log
         }
         var password = "";
         var ssh = this;
@@ -85,8 +90,20 @@ module.exports = class Ssh {
             if (ssh.status == "READY") return; //catch multiple ready signals
             ssh.status = "READY"
             logger.info("SSH Client :: ready");
-            modal.hide();
-            callback(null);
+
+            conn.sftp(function (err, sftp) {
+                if (err) {
+                    logger.info("SSH:: SFTP FAILED " + String(err));
+                    return;
+                }
+                console.log("SFTP created");
+                ssh.sftp = sftp;
+                modal.hide();
+                callback(null, ssh.username);
+            })
+
+
+
         });
 
         //The functions start with username and call upwards.. Basic call back functions, it was just
@@ -109,7 +126,7 @@ module.exports = class Ssh {
 
 
         var inputPassword = function (pass) {
-            // config['password'] = pass;
+            config['password'] = pass;
 
             conn.connect(config)
         }
@@ -160,7 +177,8 @@ module.exports = class Ssh {
         requires that conn works
     */
     readDir(path) {
-        var sortDir = function(a,b){
+        //helper function that sorts the directory list into alphabetical 
+        var sortDir = function (a, b) {
             const nameA = a.filename.toUpperCase();
             const nameB = b.filename.toUpperCase();
             let comp = 0;
@@ -170,18 +188,16 @@ module.exports = class Ssh {
         };
 
         var user = this.username;
-        console.log(user);
+        var sftp = this.sftp;
+        // path =  path.replace("~", "/home/" + user);
+
         return new Promise((resolve, reject) => {
-            this.conn.sftp(function (err, sftp) {
-                if (err) reject(err);
-                path = path.replace("~", "/home/" + user);
+            if (sftp) {
                 console.log(path);
                 sftp.readdir(path, function (err, list) {
                     if (err) {
                         reject(err);
                     }
-                    console.log(path);
-
                     list.sort(sortDir);
 
                     resolve({
@@ -190,12 +206,11 @@ module.exports = class Ssh {
                         "dir": list
                     });
                 })
-            })
+
+            } else {
+                reject("SFTP does not exist");
+            }
         })
     };
 
-
-
 }
-
-

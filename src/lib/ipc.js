@@ -1,6 +1,6 @@
-'use strict'
 //Atom's ipchelper.js 
 //https://github.com/atom/atom/blob/master/src/ipc-helpers.js
+'use strict'
 
 
 // const {ipcMain} = require('electron');
