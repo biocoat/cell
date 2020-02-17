@@ -1,6 +1,5 @@
 'use strict'
 
-const IPC = require("../lib/ipc");
  
 //https://developers.google.com/web/fundamentals/web-components/examples/howto-tabs
 /*

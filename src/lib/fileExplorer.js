@@ -1,10 +1,7 @@
 'use strict'
-const {
-    Emitter
-} = require('event-kit');
+
 const EventEmitter = require('events');
 const Ssh = require('../lib/Ssh');
-const IPC = require('../lib/ipc');
 
 module.exports = class FileExplorer extends EventEmitter {
     constructor(showHidden = false) {
@@ -68,7 +65,7 @@ module.exports = class FileExplorer extends EventEmitter {
         parentRow.setAttribute('class', 'fs-element dir')
         parentRow.addEventListener('click', () => {
             if(path === "/") return;
-            
+
             fe.run_ls(path.substring(0,path.lastIndexOf("/")));
         })
         parentRow.innerHTML = "..";
@@ -103,19 +100,16 @@ module.exports = class FileExplorer extends EventEmitter {
     }
 
     //Need to be able to log in
-    //emit event, and 
     refresh() {
         this.run_ls(this.currentDirectory);
     }
 
-    
     init(modal){
         var fe = this;
         fe.ssh.logIn(modal, function(error, username){
             if(error){
                 console.log("SSH error " + error);
                 return;
-
             }
             fe.username = username;
             fe.run_ls("/home/" + username);
@@ -123,8 +117,4 @@ module.exports = class FileExplorer extends EventEmitter {
         });
 
     }
-
-
-
-
 }

@@ -2,8 +2,10 @@
 
 const FileExplorer = require('../lib/fileExplorer')
 
-const fileEx = new FileExplorer();
+const fileEx = new FileExplorer()
 const sshBtn = document.getElementById('sshBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+
 var modal = document.getElementById('myModal');
 
 fileEx.on("fileExplorer-loading", () => {
@@ -27,3 +29,7 @@ ipcRenderer.send("main-cmd-async", "Hello There");
 sshBtn.addEventListener('click', () => {
   fileEx.init(modal);
 });
+
+refreshBtn.addEventListener('click', () => {
+  fileEx.refresh();
+})

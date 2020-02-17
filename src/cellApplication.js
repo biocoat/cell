@@ -4,20 +4,15 @@ const Ssh = require("./lib/ssh");
 const logger = require("./logger");
 const Window = require('./lib/window');
 
-const path = require('path');
-const {
-    CompositeDisposable,
-    Disposable
-} = require('event-kit');
+const {CompositeDisposable} = require('event-kit');
 
-const {
-    EventEmitter
-} = require('events');
+// const {EventEmitter} = require('events');
 //settings
 
-const { BrowserWindow, ipcMain} = require('electron');
+const {ipcMain} = require('electron');
 
 let mainWindow;
+let xtermTest;
 module.exports = class CellApplication {
     constructor() {
 
@@ -33,21 +28,24 @@ module.exports = class CellApplication {
     async createMainWindow(){
         mainWindow = new Window({
             file: 'src/editor/index.html'
+        })
+        .on('closed', () => {
+            logger.debug("Main window was closed");
+            mainWindow = null;
         });
 
-        mainWindow.on('closed', () => {
-            mainWindow = null;
+        xtermTest = new Window({
+            file: 'src/editor/term.html'
         })
+
     }
 
     quit(callback){
-        this.destroy();
+        this.disposable.dispose();
+
         callback();
     }
 
-    async destroy() {
-        this.disposable.dispose();
-    }
 
     activate(){
         if(mainWindow === null) {

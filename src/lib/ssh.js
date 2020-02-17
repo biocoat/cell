@@ -1,11 +1,7 @@
 'use strict'
 var Client = require('ssh2').Client;
 var logger = require('../logger');
-const {
-    CompositeDisposable,
-    Emitter
-} = require('event-kit');
-const IPC = require("./ipc");
+const {Emitter} = require('event-kit');
 
 // var conn = new Client();
 
@@ -15,7 +11,7 @@ const IPC = require("./ipc");
 module.exports = class Ssh {
     constructor() {
         this.username = '';
-        var conn = this.conn = new Client();
+        this.conn = new Client();
         this.status = "NONE";
         this.conn.on('error', function (error) {
             logger.error("SSH fired error " + error);
@@ -32,18 +28,6 @@ module.exports = class Ssh {
 
         this.sftp = null;
 
-
-        // const pathChangeSub = this.onPathChange((path) => {
-        //     this.readDir(path).then((res)=>{
-
-        //     });
-        // })
-
-
-        //initialize change path listener
-
-        // conn.on('ready', function() {
-        //     logger.info("SSH Client :: ready");
 
         // //TODO fix so only keyboard is ever used
         //     // conn.sftp(function(err, sftp) {
@@ -199,14 +183,12 @@ module.exports = class Ssh {
                         reject(err);
                     }
                     list.sort(sortDir);
-
                     resolve({
                         "path": path,
                         "username": user,
                         "dir": list
                     });
                 })
-
             } else {
                 reject("SFTP does not exist");
             }
