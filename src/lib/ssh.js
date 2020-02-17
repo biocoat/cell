@@ -1,6 +1,7 @@
 'use strict'
 var Client = require('ssh2').Client;
 var logger = require('../logger');
+const {Emitter} = require('event-kit');
 
 // var conn = new Client();
 
@@ -10,13 +11,23 @@ var logger = require('../logger');
 module.exports = class Ssh {
     constructor() {
         this.username = '';
-        var conn = this.conn = new Client();
+        this.conn = new Client();
+        this.status = "NONE";
         this.conn.on('error', function (error) {
             logger.error("SSH fired error " + error);
         })
 
-        // conn.on('ready', function() {
-        //     logger.info("SSH Client :: ready");
+        this.emitter = new Emitter();
+
+        this.emitter.on('ssh-path-change', (event, path) => {
+            logger.info("ssh-path-change rec")
+            this.readDir(path).then((res) => {
+                event.sender.send('ssh-path-OK', res);
+            });
+        })
+
+        this.sftp = null;
+
 
         // //TODO fix so only keyboard is ever used
         //     // conn.sftp(function(err, sftp) {
@@ -49,15 +60,34 @@ module.exports = class Ssh {
 
     //Requires modal to be passed in.
     //TODO add incorrect password checking
-    logIn(modal) {
+    logIn(modal, callback) {
         //modal.setSubmitAction
         var config = {
             'tryKeyboard': true,
+            'username': ''
+            // 'debug' : console.log
         }
+        var password = "";
+        var ssh = this;
         var conn = this.conn;
         conn.on('ready', function () {
+            if (ssh.status == "READY") return; //catch multiple ready signals
+            ssh.status = "READY"
             logger.info("SSH Client :: ready");
-            modal.hide();
+
+            conn.sftp(function (err, sftp) {
+                if (err) {
+                    logger.info("SSH:: SFTP FAILED " + String(err));
+                    return;
+                }
+                console.log("SFTP created");
+                ssh.sftp = sftp;
+                modal.hide();
+                callback(null, ssh.username);
+            })
+
+
+
         });
 
         //The functions start with username and call upwards.. Basic call back functions, it was just
@@ -68,25 +98,25 @@ module.exports = class Ssh {
             logger.info("Keyboard-interactive ssh begin");
             logger.info(prompts);
             //Set enter to do something??
-            if(prompts[0].prompt.toLocaleLowerCase().includes('password')){
-                finish([config['password']]);
+            if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
+                finish([password]);
             }
 
-            modal.setSubmitCallback(function(res){
+            modal.setSubmitCallback(function (res) {
                 finish([res]);
             });
             modal.setPlaceholder(prompts[0].prompt);
         });
 
 
-        var inputPassword = function(password){
-            config['password'] = password;
-            
+        var inputPassword = function (pass) {
+            config['password'] = pass;
+
             conn.connect(config)
         }
 
-        var inputHostName = function(host){
-            config['host'] =host;
+        var inputHostName = function (host) {
+            config['host'] = host;
             modal.setPlaceholder("connecting");
             logger.info(config);
             modal.setSubmitCallback(inputPassword);
@@ -94,8 +124,9 @@ module.exports = class Ssh {
             // modal.setSubmitCallback();
         }
 
-        var inputUsername = function(username){
+        var inputUsername = function (username) {
             config['username'] = username;
+            ssh.username = username;
             logger.info("inputusername fired");
             modal.setSubmitCallback(inputHostName);
             modal.setPlaceholder("Enter server address...(login.palmetto.clemson.edu)");
@@ -103,7 +134,7 @@ module.exports = class Ssh {
         }
 
         //Get username
-        modal.display("Enter username..."); 
+        modal.display("Enter username...");
         modal.setSubmitCallback(inputUsername)
     }
 
@@ -120,6 +151,9 @@ module.exports = class Ssh {
         console.log(config);
         this.conn.connect(config);
     };
+
+
+
     /*
     public: reads the contents of the path Path 
         Returns a Promise
@@ -127,31 +161,38 @@ module.exports = class Ssh {
         requires that conn works
     */
     readDir(path) {
+        //helper function that sorts the directory list into alphabetical 
+        var sortDir = function (a, b) {
+            const nameA = a.filename.toUpperCase();
+            const nameB = b.filename.toUpperCase();
+            let comp = 0;
+            if (nameA > nameB) comp = 1;
+            else if (nameA < nameB) comp = -1;
+            return comp;
+        };
+
+        var user = this.username;
+        var sftp = this.sftp;
+        // path =  path.replace("~", "/home/" + user);
+
         return new Promise((resolve, reject) => {
-            this.conn.sftp(function (err, sftp) {
-                if (err) reject(err);
+            if (sftp) {
+                console.log(path);
                 sftp.readdir(path, function (err, list) {
                     if (err) {
                         reject(err);
                     }
-                    resolve(list);
+                    list.sort(sortDir);
+                    resolve({
+                        "path": path,
+                        "username": user,
+                        "dir": list
+                    });
                 })
-            })
+            } else {
+                reject("SFTP does not exist");
+            }
         })
     };
-}
-// conn.on('ready', function () {
-//     console.log('Client :: ready');
-//     conn.exec('ls ~', function (err, stream) {
-//         if (err) throw err;
-//         stream.on('close', function (code, signal) {
-//             console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
-//             conn.end();
-//         }).on('data',  function (data) {
-//             console.log('STDOUT: ' + data);
-//         }).stderr.on('data', function (data) {
-//             console.log('STDERR: ' + data);
-//         });
-//     });
-// })
 
+}

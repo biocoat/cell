@@ -1,5 +1,6 @@
 'use strict'
 
+ 
 //https://developers.google.com/web/fundamentals/web-components/examples/howto-tabs
 /*
 
@@ -18,14 +19,11 @@ class ModalElement extends HTMLInputElement {
         super();
 
         this.setAttribute('class', 'modal-element');
-
         this.isVisible = false;
         this.style.display = "none";
-        this.value = "hello there"
         this.submitCallback = () => {
             console.log("Enter was pressed")
         };
-
 
         this.addEventListener("keyup", function(event){
             if(event.code == "Enter"){
@@ -71,5 +69,3 @@ class ModalElement extends HTMLInputElement {
 }
 
 customElements.define('modal-box',ModalElement, {extends: 'input'});
-
-

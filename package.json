@@ -5,21 +5,22 @@
   "main": "src/main.js",
   "scripts": {
     "rebuild": "electron-rebuild -f -w node-pty",
-    "start": "electron ."
+    "start": "electron . | bunyan"
   },
   "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",
   "dependencies": {
     "bulma": "^0.8.0",
     "bunyan": "^1.8.12",
-    "electron": "^6.0.11",
-    "electron-json-storage": "^4.1.7",
-    "graceful-fs": "^4.2.2",
-    "ssh2": "^0.8.5",
-    "xterm": "^3.14.0"
+    "electron": "^8.0.1",
+    "electron-json-storage": "^4.1.8",
+    "event-kit": "^2.5.3",
+    "graceful-fs": "^4.2.3",
+    "ssh2": "^0.8.7",
+    "xterm": "^4.4.0"
   },
   "devDependencies": {
-    "electron-rebuild": "^1.8.6",
-    "eslint": "^6.1.0"
+    "electron-rebuild": "^1.10.0",
+    "eslint": "^6.8.0"
   }
 }

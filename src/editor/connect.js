@@ -5,7 +5,7 @@ const pathBtn = document.getElementById('pathBtn');
 const ssh = new Ssh();
 
 
-submitBtn.addEventListener('click', (event) => {
+submitBtn.addEventListener('click', () => {
     console.log("Submit clicked")
     const userNameText = document.getElementById('username').value;
     const hostnameText = document.getElementById('hostname').value;
@@ -21,7 +21,7 @@ submitBtn.addEventListener('click', (event) => {
 
 });
 
-pathBtn.addEventListener('click', (event)=>{
+pathBtn.addEventListener('click', ()=>{
     console.log("path clicked");
     const pathtext = document.getElementById('pathText').value;
     ssh.readDir(pathtext).then((dir)=> {
