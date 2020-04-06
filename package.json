@@ -1,7 +1,7 @@
 {
   "name": "cell",
   "version": "0.1.2",
-  "description": "",
+  "description": "A code editor for the biologist",
   "main": "src/main.js",
   "scripts": {
     "rebuild": "electron-rebuild -f -w node-pty",
