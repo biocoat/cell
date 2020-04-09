@@ -1,0 +1,14 @@
+.field label {
+    display: inline-block;
+    /* width: 140px; */
+    padding: 2px;
+    text-align: right;
+  }
+  
+  .field input{
+    margin-left: 5px;
+  }
+  
+  body{
+      margin: 10px;
+  }

@@ -4,7 +4,8 @@
 var bunyan = require('bunyan');
 
 var logger = bunyan.createLogger({
-    name: 'Cell'
+    name: 'Cell',
+    level: 'debug'
 })
 
 module.exports = logger;

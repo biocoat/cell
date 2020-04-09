@@ -27,16 +27,17 @@ module.exports = class CellApplication {
 
     async createMainWindow(){
         mainWindow = new Window({
-            file: 'src/editor/index.html'
+            // file: 'src/editor/index.html'
+            file: 'src/forms/form.html'
         })
         .on('closed', () => {
             logger.debug("Main window was closed");
             mainWindow = null;
         });
 
-        xtermTest = new Window({
-            file: 'src/editor/term.html'
-        })
+        // xtermTest = new Window({
+        //     file: 'src/editor/term.html'
+        // })
 
     }
 

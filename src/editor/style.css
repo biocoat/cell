@@ -5,7 +5,7 @@ body {
   overflow: hidden;
 }
 
-.body{
+.body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -13,7 +13,7 @@ body {
 
 
 /* This isn't working lol */
-.body-progress > div > .fs{
+.body-progress>div>.fs {
   cursor: progress !important;
 }
 
@@ -112,11 +112,11 @@ The modal
   padding: 3%;
 }
 
-.fs-element.dir{
+.fs-element.dir {
   color: rgb(14, 55, 240);
 }
 
-.fs-element.dir:hover{
+.fs-element.dir:hover {
   text-decoration: underline;
   cursor: pointer;
 }
