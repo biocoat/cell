@@ -28,7 +28,8 @@ module.exports = class CellApplication {
     async createMainWindow(){
         mainWindow = new Window({
             // file: 'src/editor/index.html'
-            file: 'src/forms/form.html'
+            // file: 'src/forms/form.html'
+            file: 'src/editor/term.html'
         })
         .on('closed', () => {
             logger.debug("Main window was closed");
