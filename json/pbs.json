@@ -46,8 +46,17 @@
                 "name": "Resource list",
                 "flag": "-l",
                 "descripton": "What resources does this job require",
-                "input": "external",
-                "format": "palmetto",
+                "input": "string list",
+                "format": [{
+                        "name": "CPUs",
+                        "flag": "ncpus="
+                    },
+                    {
+                        "name": "RAM",
+                        "flag": "mem="
+                    }
+                ],
+                "delimenter":":",
                 "default": ""
             },
             {

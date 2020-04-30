@@ -1,5 +1,9 @@
 'use strict'
-
+const { ipcRenderer } = require('electron')
+ipcRenderer.on('ssh-data-in', (event, message) => {
+    term.write(message);
+    console.log(message) // Prints 'whoooooooh!'
+  })
 
 module.exports = class Modal {
     constructor(modal, textbox) {
@@ -12,6 +16,14 @@ module.exports = class Modal {
         if(modal){
             this.setupEventListener();
         }
+        // ipcRenderer.on('modal-display', (event, message) => {
+        //     this.setPlaceholder(message);
+        //     this.setSubmitCallback(function(res){
+        //         ipcRenderer.send('modal-input', res);
+        //     })
+        //     console.log(message) // Prints 'whoooooooh!'
+        //   })
+
             
     }
 
@@ -27,7 +39,10 @@ module.exports = class Modal {
         this.textbox.addEventListener("keyup", function (event) {
             if (event.code == "Enter") {
                 //referneces a local variable which resolved to the class
-                if (modalClass.submitCallback == null) return;
+                if (modalClass.submitCallback == null){
+                    console.log("sumbit Callbakc is NULL")
+                    return;
+                }    
                 modalClass.submitCallback(this.value);
 
             }

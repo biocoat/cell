@@ -1,33 +1,56 @@
 <!DOCTYPE html>
 
 <html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <head>
   <title>Cell</title>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../node_modules/bulma/css/bulma.css">
   <link rel="Stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+  <link rel="stylesheet" href="../../node_modules/xterm/css/xterm.css" />
+  <script src="../../node_modules/xterm/lib/xterm.js"></script>
+
   <style>
 
   </style>
 </head>
 
 <body class="body">
+
+  <cell-panel>
+    <button class="button is-small ssh" id="sshBtn"><span class="icon"><i
+          class="fas fa-arrow-circle-up fa-lg"></i></span></button>
+    <button class="button is-small ssh" id="refreshBtn"><span class="icon"><i
+          class="fas fa-sync fa-lg"></i></span></button>
+          <button class="button is-small ssh" id="goHere"><span class="icon"><i 
+            class="fas fa-level-down-alt"></i></span></button>
+    <div id="fileExplorer" class="fs"></div>
+
+  </cell-panel>
+
+  <cell-panel>
+    <div id="terminal"></div>
+  </cell-panel>
+  <cell-panel>
+    <p>
+      Only choose what you need, the system will handle default values
+  </p>
+  <form class="queue_form" id='form'>
+      <input id='submit' type="submit" formenctype="multipart/form-data"></input>
+  </form>
+  <!-- <button id='form-submit'>Submit</button> -->
+  <script src="create_form.js"></script>
+  </cell-panel>
+
+
+  <!-- <div id="fileExplorer" class="fs">  </div> -->
   <input is="modal-box" id="myModal">
 
   </input>
-  <div class="mycolumn">
-    SSH<br>
-    <button class="button is-small ssh" id="sshBtn"><span class="icon"><i class="fas fa-arrow-circle-up fa-lg"></i></span></button>
-    <button class="button is-small ssh" id="refreshBtn"><span class="icon"><i class="fas fa-sync fa-lg"></i></span></button>
 
-    <br>
-    
-    <div id="fileExplorer" class="fs">
-
-    </div>
-  </div>
   <!-- The Modal -->
 
   </div>
@@ -37,9 +60,10 @@
 
 </body>
 <script>
-  require('../lib/ssh.js')
-  require('./modal-element.js')
-  require('./index.js')
+  require('../lib/ssh.js');
+  require('./elements/modal-element.js');
+  require('./elements/panel.js');
+  require('./index.js');
 </script>
 
 </html>

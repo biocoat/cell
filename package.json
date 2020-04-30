@@ -10,7 +10,7 @@
   "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",
   "dependencies": {
-    "bulma": "^0.8.0",
+    "bulma": "^0.8.2",
     "bunyan": "^1.8.12",
     "electron": "^8.0.1",
     "electron-json-storage": "^4.1.8",

@@ -16,8 +16,8 @@ let xtermTest;
 module.exports = class CellApplication {
     constructor() {
 
-        this.ssh = new Ssh();
-
+        this.ssh = null;
+        
         global.cellApp = this;
 
         this.disposable = new CompositeDisposable();
@@ -27,14 +27,15 @@ module.exports = class CellApplication {
 
     async createMainWindow(){
         mainWindow = new Window({
-            // file: 'src/editor/index.html'
+            file: 'src/editor/index.html'
             // file: 'src/forms/form.html'
-            file: 'src/editor/term.html'
+            // file: 'src/editor/term.html'
         })
         .on('closed', () => {
             logger.debug("Main window was closed");
             mainWindow = null;
         });
+        this.ssh = new Ssh(mainWindow);
 
         // xtermTest = new Window({
         //     file: 'src/editor/term.html'
@@ -44,7 +45,7 @@ module.exports = class CellApplication {
 
     quit(callback){
         this.disposable.dispose();
-
+        this.ssh.end();
         callback();
     }
 
@@ -83,7 +84,7 @@ module.exports = class CellApplication {
     
         this.disposable.add(
             IPC.on(ipcMain, "loading-cursor", () => {
-
+                
             })
         )
 

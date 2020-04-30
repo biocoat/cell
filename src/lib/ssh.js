@@ -1,198 +1,145 @@
 'use strict'
+
 var Client = require('ssh2').Client;
 var logger = require('../logger');
-const {Emitter} = require('event-kit');
 
-// var conn = new Client();
+// In main process.
+const {
+    ipcMain
+} = require('electron')
+// ipcMain.on('asynchronous-message', (event, arg) => {
+//     console.log(arg) // prints "ping"
+//     event.reply('asynchronous-reply', 'pong')
+// })
 
-//Ssh needs to move to main. Work via IPC
-//Why?: Becuse right now, SSH obj only exists in this window
+// ipcMain.on('synchronous-message', (event, arg) => {
+//     console.log(arg) // prints "ping"
+//     event.returnValue = 'pong'
+// })
+
+// ipcMain.handle('some-name', async (event, someArgument) => {
+//     const result = await doSomeWork(someArgument)
+//     return result
+// })
+
+//Helper function for SFTP return
+var sortDir = function (a, b) {
+    const nameA = a.filename.toUpperCase();
+    const nameB = b.filename.toUpperCase();
+    let comp = 0;
+    if (nameA > nameB) comp = 1;
+    else if (nameA < nameB) comp = -1;
+    return comp;
+};
 
 module.exports = class Ssh {
-    constructor() {
-        this.username = '';
-        this.conn = new Client();
-        this.status = "NONE";
-        this.conn.on('error', function (error) {
-            logger.error("SSH fired error " + error);
-        })
+    constructor(win) {
+        var conn = this.conn = new Client();
+        var status = "NONE";
+        var username = this.username = '';
 
-        this.emitter = new Emitter();
+        // conn.connect({
+        //     host: 'access1.computing.clemson.edu',
+        //     port: 22,
+        //     username: 'whalabi',
+        //     password: ''
+        //     // privateKey: require('fs').readFileSync('/here/is/my/key')
+        // });
 
-        this.emitter.on('ssh-path-change', (event, path) => {
-            logger.info("ssh-path-change rec")
-            this.readDir(path).then((res) => {
-                event.sender.send('ssh-path-OK', res);
-            });
-        })
-
-        this.sftp = null;
-
-
-        // //TODO fix so only keyboard is ever used
-        //     // conn.sftp(function(err, sftp) {
-        //     //   if (err) throw err;
-        //     //   sftp.readdir('$', function(err, list) {
-        //     //     if (err) throw err;
-        //     //     console.dir(list);
-        //     //     conn.end();
-        //     //   });
-        //     // });
-        //   })
-    }
-
-    getUserName() {
-        return this.username;
-    }
-
-    /*
-    Public: ends the connection
-    */
-    close() {
-        this.conn.end();
-    }
-
-    /*
-        Public: connects to a ssh server
-        args: config
-                Json with username, hostname, and authentication methods
-    */
-
-    //Requires modal to be passed in.
-    //TODO add incorrect password checking
-    logIn(modal, callback) {
-        //modal.setSubmitAction
-        var config = {
-            'tryKeyboard': true,
-            'username': ''
-            // 'debug' : console.log
-        }
-        var password = "";
-        var ssh = this;
-        var conn = this.conn;
         conn.on('ready', function () {
-            if (ssh.status == "READY") return; //catch multiple ready signals
-            ssh.status = "READY"
-            logger.info("SSH Client :: ready");
+            console.log("SSH::READY");
+            status = "OK"
+            conn.shell(function (err, stream) {
+                if (err) throw err;
+               win.webContents.send('ssh', "OK");
+                stream.on('close', function () {
+                    console.log('Stream :: close');
+                    conn.end();
+                }).on('data', function (data) {
+                    //   console.log('OUTPUT: ' + data);
+                    win.webContents.send('ssh-data-in', data);
+
+                });
+                ipcMain.on('ssh-data-out', (event, arg) => {
+                    stream.write(arg);
+                });
+            });
 
             conn.sftp(function (err, sftp) {
                 if (err) {
                     logger.info("SSH:: SFTP FAILED " + String(err));
+                    event.reply('fe-dir', 'error', err);
                     return;
                 }
                 console.log("SFTP created");
-                ssh.sftp = sftp;
-                modal.hide();
-                callback(null, ssh.username);
-            })
+                ipcMain.on("ssh-read-dir", (event, path)=> {
+                    logger.debug(path);
+                    sftp.readdir(path, function(err,list){
+                        if(err){
+                            event.reply('fe-dir', 'error', err);                            return;
+                            return;
+                        }
+                        list.sort(sortDir);
+                        event.reply('fe-dir', {
+                            "path": path,
+                            "username" : username,
+                            "dir" : list
+                        });
 
-
-
+                    })
+                })
+            });
         });
-
-        //The functions start with username and call upwards.. Basic call back functions, it was just
-        //getting to be a lot
 
         //******NOTE finish requires a list ******
         conn.on('keyboard-interactive', function (name, instructions, instructionsLang, prompts, finish) {
             logger.info("Keyboard-interactive ssh begin");
             logger.info(prompts);
-            //Set enter to do something??
-            if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
-                finish([password]);
-            }
-
-            modal.setSubmitCallback(function (res) {
-                finish([res]);
+            // if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
+            // } else {
+            //     finish(["1"])
+            // }
+            
+            //Send the text to the modal
+            //Listen once, this stops bounce??
+            //Unsure why it works, but only using once and having listner
+            //reinit every time works.
+            win.webContents.send('modal-display', prompts[0].prompt);
+            ipcMain.once('modal-input', (_, arg) => {
+                logger.info(arg)
+                logger.info(typeof(arg));
+                finish([arg]);
             });
-            modal.setPlaceholder(prompts[0].prompt);
+            // if(prompts[0].prompt.toLocaleLowerCase().includes('password')) {
+            //     // finish(["password"])
+            // } else {
+            //     finish(["1"])
+            // };
+            
+            // modal.setSubmitCallback(function (res) {
+            //     finish([res]);
+            // });
+            // modal.setPlaceholder(prompts[0].prompt);
+        });
+
+        ipcMain.handle('ssh-login', async (event, config) => {
+            username = config['username'];
+            config['tryKeyboard'] = true;
+            config['keepaliveInterval'] = 1000;
+            config['readyTimeout'] = 99999999;
+            config['debug'] = console.log();
+            console.log(config);
+            var ret = await conn.connect(config);
+            
+
+            //return restult;
         });
 
 
-        var inputPassword = function (pass) {
-            config['password'] = pass;
-
-            conn.connect(config)
-        }
-
-        var inputHostName = function (host) {
-            config['host'] = host;
-            modal.setPlaceholder("connecting");
-            logger.info(config);
-            modal.setSubmitCallback(inputPassword);
-            modal.setPlaceholder("password");
-            // modal.setSubmitCallback();
-        }
-
-        var inputUsername = function (username) {
-            config['username'] = username;
-            ssh.username = username;
-            logger.info("inputusername fired");
-            modal.setSubmitCallback(inputHostName);
-            modal.setPlaceholder("Enter server address...(login.palmetto.clemson.edu)");
-
-        }
-
-        //Get username
-        modal.display("Enter username...");
-        modal.setSubmitCallback(inputUsername)
     }
-
-    connect(config, pass) {
-        this.conn.on('keyboard-interactive', function (name, instructions, instructionsLang, prompts, finish) {
-            console.log('Connection :: keyboard-interactive');
-            console.log(prompts);
-            if (prompts[0].prompt.toLocaleLowerCase().includes('password')) {
-                finish([pass]);
-            } else {
-                finish(["1"]);
-            }
-        });
-        console.log(config);
-        this.conn.connect(config);
-    };
-
-
-
-    /*
-    public: reads the contents of the path Path 
-        Returns a Promise
-        args: path
-        requires that conn works
-    */
-    readDir(path) {
-        //helper function that sorts the directory list into alphabetical 
-        var sortDir = function (a, b) {
-            const nameA = a.filename.toUpperCase();
-            const nameB = b.filename.toUpperCase();
-            let comp = 0;
-            if (nameA > nameB) comp = 1;
-            else if (nameA < nameB) comp = -1;
-            return comp;
-        };
-
-        var user = this.username;
-        var sftp = this.sftp;
-        // path =  path.replace("~", "/home/" + user);
-
-        return new Promise((resolve, reject) => {
-            if (sftp) {
-                console.log(path);
-                sftp.readdir(path, function (err, list) {
-                    if (err) {
-                        reject(err);
-                    }
-                    list.sort(sortDir);
-                    resolve({
-                        "path": path,
-                        "username": user,
-                        "dir": list
-                    });
-                })
-            } else {
-                reject("SFTP does not exist");
-            }
-        })
-    };
+    
+    end(){
+        this.conn.end();
+    }
 
 }

@@ -1,15 +1,24 @@
 'use strict'
 
 const EventEmitter = require('events');
-const Ssh = require('../lib/Ssh');
-
+// const Ssh = require('../lib/Ssh');
+const {
+    ipcRenderer
+} = require('electron')
 module.exports = class FileExplorer extends EventEmitter {
     constructor(showHidden = false) {
         super();
-        
+
         this.username;
         this.currentDirectory;
         this.showHidden = showHidden;
+
+        ipcRenderer.on('ssh', (event, args) => {
+            if(args == "OK"){
+                console.log("Hello?")
+                this.run_ls("/home/" + this.username);
+            }
+        })
 
         // this.emitter = new Emitter();
 
@@ -17,26 +26,33 @@ module.exports = class FileExplorer extends EventEmitter {
         //     console.log("I have the high ground")
         // })
 
-        this.ssh = new Ssh();
+        // this.ssh = new Ssh();
 
 
 
     }
 
-    run_ls(path){
+    run_ls(path) {
         var fe = this;
         console.log(path);
-        this.emit("fileExplorer-loading");
-        this.ssh.readDir(path).then((res)=>{
-            // fe.setUsername(res['username']);
+        // this.emit("fileExplorer-loading");
+        ipcRenderer.on('fe-dir', (event, res,error) => {
+            if(error){
+                console.log("SFTP threw error " + error);
+                return;
+            }
             fe.update(res["path"], res["dir"]);
-
-        }).catch((error) => {
-            console.log(error);
         })
+        ipcRenderer.send('ssh-read-dir', path);
 
-        // console.log(this);
-        // this.update(path, this.emitter.emit('ssh-path-change', path));
+        // this.ssh.readDir(path).then((res) => {
+        //     // fe.setUsername(res['username']);
+        //     fe.update(res["path"], res["dir"]);
+
+        // }).catch((error) => {
+        //     console.log(error);
+        // })
+
     }
 
     update(path, dirList) {
@@ -64,12 +80,12 @@ module.exports = class FileExplorer extends EventEmitter {
         var parentRow = table.insertRow(0)
         parentRow.setAttribute('class', 'fs-element dir')
         parentRow.addEventListener('click', () => {
-            if(path === "/") return;
+            if (path === "/") return;
 
-            fe.run_ls(path.substring(0,path.lastIndexOf("/")));
+            fe.run_ls(path.substring(0, path.lastIndexOf("/")));
         })
         parentRow.innerHTML = "..";
-        
+
         var fe = this;
         dirList.forEach(function (item) {
             var name = item['filename'];
@@ -84,7 +100,7 @@ module.exports = class FileExplorer extends EventEmitter {
                 row.setAttribute('class', 'fs-element dir');
                 row.addEventListener('click', () => {
                     console.log(name);
-                    row.cells[0].innerHTML = '<i class="fa fa-spinner fa-spin">' + name + '</i>';  
+                    row.cells[0].innerHTML = '<i class="fa fa-spinner fa-spin">' + name + '</i>';
                     fe.run_ls(path + "/" + name);
                 });
             }
@@ -101,20 +117,51 @@ module.exports = class FileExplorer extends EventEmitter {
 
     //Need to be able to log in
     refresh() {
+        if(this.currentDirectory == undefined){
+            this.currentDirectory = '/home/';
+        }
         this.run_ls(this.currentDirectory);
     }
 
-    init(modal){
+    init(modal) {
         var fe = this;
-        fe.ssh.logIn(modal, function(error, username){
-            if(error){
-                console.log("SSH error " + error);
-                return;
-            }
+        // modal.setPlacholder()
+        var config = {};
+        modal.display("Enter Username");
+        modal.setSubmitCallback(function (username) {
+            config['username'] = username;
             fe.username = username;
-            fe.run_ls("/home/" + username);
-            
-        });
+            modal.setPlaceholder("Enter server address...");
+            modal.setSubmitCallback(function (host) {
+                config['host'] = host;
+                modal.setPlaceholder("password");
+                modal.setSubmitCallback(function (pass) {
+                    // config['password'] = pass;
+                    modal.setSubmitCallback(function (ans) {
+                        ipcRenderer.send('modal-input', ans);
+                    })
+                    ipcRenderer.on('modal-display', (event, message) => {
+                        modal.setPlaceholder(message);
 
+                    })
+                    ipcRenderer.invoke('ssh-login', config, pass).then((res) => {
+                        //wait for a send
+                    })
+                })
+            })
+        })
+        // fe.ssh.logIn(modal, function(error, username){
+        //     if(error){
+        //         console.log("SSH error " + error);
+        //         return;
+        //     }
+        //     fe.username = username;
+        //     fe.run_ls("/home/" + username);
+
+        // });
+
+    }    
+    goHere(){
+        ipcRenderer.send('ssh-data-out', "cd " + this.currentDirectory);
     }
 }

@@ -1,6 +1,7 @@
 'use strict'
 
 const loadJson = require('load-json-file');
+const {ipcRenderer} = require('electron');
 const path = require('path');
 const logger = require('../logger');
 
@@ -197,5 +198,5 @@ function submit(event) {
         // logger.debug(option['input']);
     }
     
-    console.log(out);
+    ipcRenderer.send('ssh-data-out',out);
 }
