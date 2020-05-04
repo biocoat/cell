@@ -23,11 +23,13 @@ git
 
 Node and npm (built using Node version 10.16.3 and Npm version 6.9.0)
 
+Yarn: A package manager that handles Node packages and builds the application. It can work with npm, but yarn is prefered. 
+
 ### Steps to build
 1.  Clone repository locally
 2.  `cd cell`
-3.  `npm install`
-4.  `npm start`
+3.  `yarn`
+4.  `yarn start`
 
 
 Contributing

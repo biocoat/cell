@@ -1,20 +1,18 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "node": true,
-        "commonjs": true,
-        "es6": true
-    },
-    "extends": "eslint:recommended",
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2018
-    },
-    "rules": {
-        "no-unused-vars": 1,
-        "no-extra-semi": 0
-    }
-};
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+  },
+  plugins: ['@typescript-eslint'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+  ],
+  ignorePatterns: ["temp.js", "node_modules/", "out/"],
+  rules: {
+    "@typescript-eslint/no-var-requires": "warn"
+    // Overwrite rules specified from the extended configs e.g. 
+    // "@typescript-eslint/explicit-function-return-type": "off",
+
+
+  }
+}

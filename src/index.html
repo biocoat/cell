@@ -6,12 +6,12 @@
   <title>Cell</title>
   <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../../node_modules/bulma/css/bulma.css">
-  <link rel="Stylesheet" href="style.css">
+  <link rel="stylesheet" href="./../node_modules/bulma/css/bulma.css">
+  <link rel="Stylesheet" href="./editor/style.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
-  <link rel="stylesheet" href="../../node_modules/xterm/css/xterm.css" />
-  <script src="../../node_modules/xterm/lib/xterm.js"></script>
+  <link rel="stylesheet" href="./../node_modules/xterm/css/xterm.css" />
+  <script src="./../node_modules/xterm/lib/xterm.js"></script>
 
   <style>
 
@@ -25,8 +25,8 @@
           class="fas fa-arrow-circle-up fa-lg"></i></span></button>
     <button class="button is-small ssh" id="refreshBtn"><span class="icon"><i
           class="fas fa-sync fa-lg"></i></span></button>
-          <button class="button is-small ssh" id="goHere"><span class="icon"><i 
-            class="fas fa-level-down-alt"></i></span></button>
+    <button class="button is-small ssh" id="goHere"><span class="icon"><i
+          class="fas fa-level-down-alt"></i></span></button>
     <div id="fileExplorer" class="fs"></div>
 
   </cell-panel>
@@ -37,12 +37,12 @@
   <cell-panel>
     <p>
       Only choose what you need, the system will handle default values
-  </p>
-  <form class="queue_form" id='form'>
+    </p>
+    <form class="queue_form" id='form'>
       <input id='submit' type="submit" formenctype="multipart/form-data"></input>
-  </form>
-  <!-- <button id='form-submit'>Submit</button> -->
-  <script src="create_form.js"></script>
+    </form>
+    <!-- <button id='form-submit'>Submit</button> -->
+    <script src="../out/editor/create_form.js"></script>
   </cell-panel>
 
 
@@ -60,10 +60,9 @@
 
 </body>
 <script>
-  require('../lib/ssh.js');
-  require('./elements/modal-element.js');
-  require('./elements/panel.js');
-  require('./index.js');
+  require('../out/editor/elements/modal-element.js');
+  require('../out/editor/elements/panel.js');
+  require('../out/editor/index.js');
 </script>
 
 </html>

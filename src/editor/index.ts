@@ -1,17 +1,15 @@
-'use strict'
+'use strict';
 
-const FileExplorer = require('../lib/fileExplorer')
+import { FileExplorer } from '../lib/fileExplorer';
+import { ipcRenderer } from 'electron';
 
-const fileEx = new FileExplorer()
 const sshBtn = document.getElementById('sshBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const goHereBtn = document.getElementById('goHere');
-const termDom = document.getElementById('terminal')
+const termDom = document.getElementById('terminal');
+const modal = document.getElementById('myModal');
 
-var modal = document.getElementById('myModal');
-const { ipcRenderer } = require('electron')
-
-
+const fileEx = new FileExplorer();
 // fileEx.on("fileExplorer-loading", () => {
 //   console.log("LOADING");
 //   document.body.classList.add('body-progress');
@@ -21,16 +19,16 @@ const { ipcRenderer } = require('electron')
 //   document.body.classList.remove('body-progress');
 // });
 
-var term = new Terminal();
+const term = new Terminal();
 term.open(termDom);
 // term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ');
 term.onTitleChange(function (title) {
-  // document.title = title
+	// document.title = title
 });
 
 // term.onKey(e => {
 //   console.log(typeof(e))
-  // ipcRenderer.send('ssh-data-out', e);
+// ipcRenderer.send('ssh-data-out', e);
 //   // const printable = !e.domEvent.altKey && !e.domEvent.altGraphKey && !e.domEvent.ctrlKey && !e.domEvent.metaKey;
 
 //   // if (e.domEvent.keyCode === 13) {
@@ -46,19 +44,17 @@ term.onTitleChange(function (title) {
 // });
 
 ipcRenderer.on('ssh-data-in', (event, message) => {
-  term.write(message);
-  console.log(message) // Prints 'whoooooooh!'
-})
-
+	term.write(message);
+	console.log(message); // Prints 'whoooooooh!'
+});
 
 function prompt(term) {
-  term.write('\r\n$ ');
+	term.write('\r\n$ ');
 }
 
 term.onData(function (data) {
-  ipcRenderer.send('ssh-data-out', data);
-
-})
+	ipcRenderer.send('ssh-data-out', data);
+});
 
 /*
 ipcRenderer.on("main-cmd-reply",(event, arg)=>{
@@ -68,19 +64,15 @@ ipcRenderer.on("main-cmd-reply",(event, arg)=>{
 ipcRenderer.send("main-cmd-async", "Hello There");
 */
 
-
 sshBtn.addEventListener('click', () => {
-  fileEx.init(modal);
+	fileEx.init(modal);
 });
 
 refreshBtn.addEventListener('click', () => {
-  fileEx.refresh();
-})
+	fileEx.refresh();
+});
 
 goHereBtn.addEventListener('click', () => {
-  fileEx.goHere();
-  termDom.focus()
-})
-
-
-
+	fileEx.goHere();
+	termDom.focus();
+});
