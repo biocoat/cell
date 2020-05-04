@@ -6,8 +6,8 @@
     "develop": "npm run tsc -- npm  start",
     "start": "electron out/main.js",
     "tsc": "tsc",
-    "pack": "exit && electron-builder --dir",
-    "dist": "exit && electron-builder",
+    "pack": "electron-builder --dir",
+    "release": "electron-builder",
     "prettier:base": "prettier --parser typescript",
     "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
     "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\""
