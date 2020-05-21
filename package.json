@@ -14,7 +14,7 @@
     "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
     "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\""
   },
-  "repository": "https://github.com/joehal9000/cell",
+  "repository": "https://github.com/biocoat/cell",
   "author": "Wajdi Halabi",
   "build": {
     "appId": "edu.clemson.cell",
