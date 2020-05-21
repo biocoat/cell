@@ -1,19 +1,19 @@
 Cell
 ---
 
-A coding editor for the biologist.  This is designed to help non-comuter-scientists with the 
+A coding editor for the biologist.  This is designed to help non-computer-scientists with the 
 following skills:
 
 
 1.  Navigate remote server files
 2.  Build data pipelines
 3.  Configure environments, especially conda
-4.  Work with High Performace Computing systems 
+4.  Work with High Performance Computing systems 
 5.  Lessen the amount of Linux and configuration needed to start
 
 
 This is under the philosophy that the limiting factor for genomics, bioinformatics, or 
-any other biology based reserach should be biology, not computational theory.
+any other biology based research should be biology, not computational theory.
 
 Build
 ---
@@ -23,7 +23,7 @@ git
 
 Node and npm (built using Node version 10.16.3 and Npm version 6.9.0)
 
-Yarn: A package manager that handles Node packages and builds the application. It can work with npm, but yarn is prefered. 
+Yarn: A package manager that handles Node packages and builds the application. It can work with npm, but yarn is preferred. 
 
 ### Steps to build
 1.  Clone repository locally
@@ -36,7 +36,6 @@ Contributing
 ---
 All contributions should go through the Issues tab.
 
-
 Contributions can be bug reports, feature requests, or changes to the repo.  
 
 A bug report should include what steps to reproduce the error
@@ -44,7 +43,7 @@ and any data you might find prudent (OS, stack trace if possible, the weather, e
 
 Feature requests should include what you want to see, why you think it's necessary, and possibly implementation details.
 
-Changes to the repo. Make one of the above issues first. Once a  plan is reached and implemented, make a pull request with the repo and it'll be reviewed for incorporation into the project.
+Changes to the repo. Make one of the above issues first. Once a plan is reached and implemented, make a pull request with the repo and it'll be reviewed for incorporation into the project.
 
 
 Acknowledgements
