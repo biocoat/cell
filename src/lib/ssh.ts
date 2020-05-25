@@ -31,6 +31,16 @@ const sortDir = function (a: any, b: any): number {
 	return comp;
 };
 
+/*FIXME Uncaught exception STREAM_WRITE_AFTER_END
+CAUSE: killing the ssh session and the logging back in 
+*/
+
+/*
+Notes
+Use .once event listeners inside callbacks in ssh2.
+Otherwise there is bounce and ssh2 hangs 
+*/
+
 export class Ssh {
 	status: string;
 	username: string;
@@ -39,13 +49,7 @@ export class Ssh {
 		this.conn = new Client();
 		this.status = 'NONE';
 		this.username = '';
-		// conn.connect({
-		//     host: 'access1.computing.clemson.edu',
-		//     port: 22,
-		//     username: 'whalabi',
-		//     password: ''
-		//     // privateKey: require('fs').readFileSync('/here/is/my/key')
-		// });
+
 		const username = this.username;
 		this.conn.on('ready', () => {
 			console.log('SSH::READY');
@@ -102,8 +106,8 @@ export class Ssh {
 			// }
 
 			//Send the text to the modal
-			//Listen once, this stops bounce??
-			//Unsure why it works, but only using once and having listner
+			//NOTE Listen once, this stops bounce??
+			//Unsure why it works, but only using once and having listener
 			//reinit every time works.
 			win.webContents.send('modal-display', prompts[0].prompt);
 			ipcMain.once('modal-input', (event, arg) => {
@@ -126,14 +130,25 @@ export class Ssh {
 		ipcMain.handle('ssh-login', async (event, config) => {
 			this.username = config['username'];
 			config['tryKeyboard'] = true;
-			config['keepaliveInterval'] = 1000;
-			config['readyTimeout'] = 99999999;
-			config['debug'] = console.log();
+			// config['keepaliveInterval'] = 1000;
+			// config['readyTimeout'] = 99999999;
+			// config['debug'] = (info: string): void => {logger.info(info);};
+
+			//Keyboard interactive must be tried before password. the invalid password attempts force Palmetto
+			//to close the session after authentication
+			//See https://github.com/mscdex/ssh2/issues/895 for more details
+			let authPos = 0;
+			//
+			const authsAllowed = ['none', 'keyboard-interactive', 'password']; //'publickey', 'agent', 'hostbased']; //Full list, but not used yet
+			config['authHandler'] = function authHandler(authsLeft: any, partial: any, cb: any): boolean | string {
+				if (authPos === authsAllowed.length) return false;
+				return authsAllowed[authPos++];
+			};
 			console.log(config);
 			this.conn.connect(config);
 			// var ret = await this.conn.connect(config);
 
-			//return restult;
+			//return result;
 		});
 	}
 

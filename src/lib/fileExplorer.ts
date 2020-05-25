@@ -136,6 +136,7 @@ export class FileExplorer extends EventEmitter {
 		const config = {
 			username: '',
 			host: '',
+			password: '',
 		};
 		modal.display('Enter Username');
 		modal.setSubmitCallback((username: string) => {
@@ -146,7 +147,7 @@ export class FileExplorer extends EventEmitter {
 				config['host'] = host;
 				modal.setPlaceholder('password');
 				modal.setSubmitCallback(function (pass) {
-					// config['password'] = pass;
+					config['password'] = pass;
 					modal.setSubmitCallback(function (ans) {
 						ipcRenderer.send('modal-input', ans);
 					});

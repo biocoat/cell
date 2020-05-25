@@ -10,7 +10,7 @@
 - File explorer to graphically navigate remoter server
 <!-- END RELEASE NOTES -->
 
-# [v0.1.1](https://github.com/biocoat/cell/releases/tag/v0.2.0)
+# [v0.1.1](https://github.com/biocoat/cell/releases/tag/v0.1.1)
 
 - starting project, but no executables
 <!-- END RELEASE NOTES -->
