@@ -1,0 +1,26 @@
+name: Release
+
+on: push
+
+jobs:
+  test_pull_request:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Install Node Packages
+        run: yarn #Install node_modules
+      - name: Compile Typescript
+        run: yarn build
+      - name: Release Cell
+        uses: actions/create-release@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: |
+            Changes in this release
+        run: yarn release
+        if: always()
+      # - run: yarn test

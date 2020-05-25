@@ -18,7 +18,11 @@
   "repository": "https://github.com/biocoat/cell",
   "author": "Wajdi Halabi",
   "build": {
-    "appId": "edu.clemson.cell",
+    "appId": "io.biocoat.cell",
+    "publish": "github",
+    "extraFiles": [
+      "json"
+    ],
     "nsis": {
       "license": "LICENSE"
     }
@@ -41,7 +45,6 @@
     "@typescript-eslint/parser": "^2.30.0",
     "electron": "^8.2.5",
     "electron-builder": "^22.6.0",
-    "electron-rebuild": "^1.10.0",
     "eslint": "^6.8.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
