@@ -25,6 +25,9 @@
     ],
     "nsis": {
       "license": "LICENSE"
+    },
+    "linux": {
+      "target": "deb"
     }
   },
   "dependencies": {
