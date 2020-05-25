@@ -15,12 +15,9 @@ jobs:
       - name: Compile Typescript
         run: yarn build
       - name: Release Cell
-        uses: actions/create-release@v1
+        # uses: actions/create-release@v1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          body: |
-            Changes in this release
         run: yarn release
         if: always()
       # - run: yarn test
