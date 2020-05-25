@@ -11,6 +11,6 @@ jobs:
         with:
           node-version: '14'
       - run: yarn #Install node_modules
-      - run: yarn prettier:write
       - run: yarn build
+      - run: yarn prettier:check
       # - run: yarn test
