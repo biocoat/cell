@@ -23,5 +23,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn release
-        if: succeeded() || failed()
+        if: success() || failure()
       # - run: yarn test
