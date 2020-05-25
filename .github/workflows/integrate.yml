@@ -13,5 +13,5 @@ jobs:
       - run: yarn #Install node_modules
       - run: yarn build
       - run: yarn prettier:check
-        if: always
+        if: always()
       # - run: yarn test
