@@ -2,12 +2,17 @@
 
 import { FileExplorer } from '../lib/fileExplorer';
 import { ipcRenderer } from 'electron';
+import { Terminal } from 'xterm';
 
 const sshBtn = document.getElementById('sshBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const goHereBtn = document.getElementById('goHere');
 const termDom = document.getElementById('terminal');
-const modal = document.getElementById('myModal');
+const modal = (document.getElementById('myModal') as ModalElement) || null;
+
+if (!sshBtn || !refreshBtn || !goHereBtn || !termDom || !modal) {
+	throw new Error('One or more DOMs undefined');
+}
 
 const fileEx = new FileExplorer();
 // fileEx.on("fileExplorer-loading", () => {
@@ -21,9 +26,8 @@ const fileEx = new FileExplorer();
 
 const term = new Terminal();
 term.open(termDom);
-// term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ');
 term.onTitleChange(function (title) {
-	// document.title = title
+	// document.title = title;
 });
 
 // term.onKey(e => {
@@ -45,10 +49,10 @@ term.onTitleChange(function (title) {
 
 ipcRenderer.on('ssh-data-in', (event, message) => {
 	term.write(message);
-	console.log(message); // Prints 'whoooooooh!'
+	console.log(message);
 });
 
-function prompt(term) {
+function prompt(term: Terminal): void {
 	term.write('\r\n$ ');
 }
 

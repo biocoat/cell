@@ -1,7 +1,7 @@
 'use strict';
 
 class Settings {
-	constructor() {}
+	// constructor() {}
 }
 
 module.exports = Settings;

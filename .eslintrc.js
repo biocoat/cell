@@ -10,6 +10,7 @@ module.exports = {
   ignorePatterns: ["temp.js", "node_modules/", "out/"],
   rules: {
     "@typescript-eslint/no-var-requires": "warn"
+
     // Overwrite rules specified from the extended configs e.g. 
     // "@typescript-eslint/explicit-function-return-type": "off",
 

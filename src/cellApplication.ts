@@ -1,5 +1,4 @@
 'use strict';
-import { ipcMain } from 'electron';
 import { CompositeDisposable } from 'event-kit';
 // import * as IPC from './lib/ipc';
 import * as path from 'path';
@@ -16,7 +15,7 @@ let mainWindow: CellWindow | null;
 
 export class CellApplication {
 	ssh: Ssh | null;
-	disposable: any;
+	disposable: CompositeDisposable;
 
 	constructor() {
 		// global.cellApp = this;

@@ -42,6 +42,7 @@
     "xterm": "^4.4.0"
   },
   "devDependencies": {
+    "@types/node": "12",
     "@types/event-kit": "^2.4.0",
     "@types/ssh2": "^0.5.43",
     "@typescript-eslint/eslint-plugin": "^2.30.0",

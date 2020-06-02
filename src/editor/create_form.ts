@@ -11,7 +11,7 @@ const fields = forms.fields;
 const validators = forms.validators;
 const widgets = forms.widgets;
 
-let data = {};
+let data: { [key: string]: any[] } = {};
 // var JSONDIR = "json/pbs.json"
 
 // var load = loadJson.sync(JSONDIR)
@@ -19,25 +19,27 @@ let data = {};
 // load['qsub']["_option_types"].forEach(element => {
 //     logger.debug(element);
 // });
-let regForm: string;
+let regForm: any;
 
 const createForm = function (scheme = 'qsub', server = 'palmetto'): void {
-	// var json_path = path.resolve( __dirname + "../.."+ "json", name + ".json");
-	// var json_path = "json/pbs.json";
-	var json_path = 'json/pbs.json';
+	// var JSONPath = path.resolve( __dirname + "../.."+ "json", name + ".json");
+	// var JSONPath = "json/pbs.json";
+	const JSONPath = 'json/pbs.json';
 
-	var doc = document.getElementById('form');
+	const doc = document.getElementById('form');
+	if (doc === null) {
+		throw new Error('forms DOM undefined');
+	}
 
-	data = loadJson.sync(json_path)[scheme];
+	data = loadJson.sync(JSONPath)[scheme];
 	console.log(data);
-	var child;
-	var option;
-	var formData = {};
-	for (var i = 0; i < data['options'].length; i++) {
+	let option;
+	const formData: { [key: string]: any[] } = {};
+	for (let i = 0; i < data['options'].length; i++) {
 		option = data['options'][i];
 		// logger.debug(option['input']);
 		console.debug(option['input']);
-		var inputType = option['input'];
+		const inputType = option['input'];
 		if (inputType == 'date') {
 			console.debug('date found');
 		} else if (inputType == 'file') {
@@ -55,8 +57,8 @@ const createForm = function (scheme = 'qsub', server = 'palmetto'): void {
 		} else if (inputType == 'external') {
 			console.debug('external found');
 		} else if (inputType == 'combination') {
-			var combinations = {};
-			for (var com in option['format']) {
+			const combinations: { [key: string]: any[] } = {};
+			for (const com in option['format']) {
 				// console.log(option['format'][com]);
 				combinations[option['format'][com]['flag']] = option['format'][com]['name'];
 			}
@@ -108,36 +110,37 @@ createForm();
 //     console.log(this)
 // })
 
-function myView(req, res) {
-	console.log(req);
-	regForm.handle(req, {
-		success: function (form) {
-			console.log(form.data);
-			// there is a request and the form is valid
-			// form.data contains the submitted data
-		},
-		error: function (form) {
-			// the data in the request didn't validate,
-			// calling form.toHTML() again will render the error messages
-		},
-		empty: function (form) {
-			// there was no form data in the request
-		},
-	});
-}
-var formDOM = document.getElementById('form');
-formDOM.onsubmit = submit;
+// function myView(req, res) {
+// 	console.log(req);
+// 	regForm.handle(req, {
+// 		success: function (form) {
+// 			console.log(form.data);
+// 			// there is a request and the form is valid
+// 			// form.data contains the submitted data
+// 		},
+// 		error: function (form) {
+// 			// the data in the request didn't validate,
+// 			// calling form.toHTML() again will render the error messages
+// 		},
+// 		empty: function (form) {
+// 			// there was no form data in the request
+// 		},
+// 	});
+// }
 
-function submit(event) {
+const formDOM = (document.getElementById('form') as HTMLFormElement) || null;
+if (!formDOM) throw new Error('Form DOM undefined');
+
+formDOM.onsubmit = function submit(event): void {
 	event.preventDefault();
 	// console.log(event);
 
-	var recPack = new FormData(formDOM);
-	var res = {};
+	const recPack = new FormData(formDOM) as any;
+	const res: { [key: string]: any } = {};
 	// console.log(rePac);
 
 	//Unpack entries into object
-	for (var [key, value] of recPack.entries()) {
+	for (const [key, value] of recPack.entries()) {
 		// console.log(key, value);
 		if (key in res) {
 			res[key] = res[key] + value;
@@ -145,15 +148,15 @@ function submit(event) {
 			res[key] = value;
 		}
 	}
-	var option;
-	var out = 'qsub ';
-	for (var i = 0; i < data['options'].length; i++) {
+	let option;
+	let out = 'qsub ';
+	for (let i = 0; i < data['options'].length; i++) {
 		option = data['options'][i];
-		var flag = option['flag'];
+		const flag = option['flag'];
 		if (flag in res) {
 			//Found a flag
 			console.log(flag);
-			var inputType = option['input'];
+			const inputType = option['input'];
 			console.log(inputType);
 			if (inputType == 'date') {
 				console.log('date found');
@@ -175,7 +178,7 @@ function submit(event) {
 				console.log('custom list found');
 			} else if (inputType == 'string') {
 				console.log('string found');
-				if (res[flag] != '') {
+				if (res[flag] !== '') {
 					// console.log("Hello?")
 					out += flag + ' ' + res[flag] + ' ';
 				}
@@ -188,4 +191,4 @@ function submit(event) {
 	}
 
 	ipcRenderer.send('ssh-data-out', out);
-}
+};

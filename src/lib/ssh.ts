@@ -144,7 +144,6 @@ export class Ssh {
 				if (authPos === authsAllowed.length) return false;
 				return authsAllowed[authPos++];
 			};
-			console.log(config);
 			this.conn.connect(config);
 			// var ret = await this.conn.connect(config);
 
