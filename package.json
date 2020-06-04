@@ -1,10 +1,10 @@
 {
   "name": "cell",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A code editor for the biologist",
   "main": "out/main.js",
   "scripts": {
-    "develop": "npm run tsc -- npm  start",
+    "develop": "electron out/main.js | bunyan",
     "start": "electron out/main.js",
     "build": "tsc",
     "pack": "electron-builder --dir",
@@ -34,6 +34,7 @@
     "bulma": "^0.8.2",
     "bunyan": "^1.8.12",
     "electron-json-storage": "^4.1.8",
+    "electron-updater": "^4.3.1",
     "event-kit": "^2.5.3",
     "forms": "^1.3.1",
     "graceful-fs": "^4.2.3",
@@ -42,8 +43,8 @@
     "xterm": "^4.4.0"
   },
   "devDependencies": {
-    "@types/node": "12",
     "@types/event-kit": "^2.4.0",
+    "@types/node": "12",
     "@types/ssh2": "^0.5.43",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",

@@ -2,9 +2,11 @@
 import { CompositeDisposable } from 'event-kit';
 // import * as IPC from './lib/ipc';
 import * as path from 'path';
-
+import { autoUpdater, UpdaterSignal } from 'electron-updater';
 const logger = require('./logger');
 // import {Logger} as logger from './logger;'
+
+//Custom classes
 import { CellWindow } from './lib/window';
 import { Ssh } from './lib/ssh';
 
@@ -22,6 +24,9 @@ export class CellApplication {
 		this.ssh = null;
 		this.disposable = new CompositeDisposable();
 		this.initEventHandle();
+
+		//setup update
+		autoUpdater.logger = logger;
 	}
 
 	createMainWindow(): void {
@@ -34,6 +39,10 @@ export class CellApplication {
 			logger.debug('Main window was closed');
 			mainWindow = null;
 		});
+		if (mainWindow) {
+			this.update();
+			mainWindow.webContents.send('status-change', 'OK');
+		}
 		this.ssh = new Ssh(mainWindow);
 
 		// xtermTest = new Window({
@@ -53,6 +62,29 @@ export class CellApplication {
 		}
 	}
 
+	update(): void {
+		autoUpdater.on('checking-for-update', () => {
+			logger.debug('Checking for updates');
+			// mainWindow.webContents.send('status-change', 'Update available');
+		});
+		autoUpdater.on('update-available', () => {
+			logger.info('Update available');
+			mainWindow.webContents.send('status-change', 'Update available');
+		});
+
+		autoUpdater.on('error', (err) => {
+			logger.error('AutoUpdater err' + err);
+			mainWindow.webContents.send('status-change', 'Update Error');
+		});
+
+		autoUpdater.on('update-downloaded', (info) => {
+			logger.info('Update available');
+			mainWindow.webContents.send('status-change', 'Update Downloaded');
+		});
+
+		autoUpdater.checkForUpdatesAndNotify();
+	}
+
 	initEventHandle(): void {
 		/*Test IPC emitters using HelloThere
             Example call: 
@@ -60,7 +92,7 @@ export class CellApplication {
         */
 		// this.disposable.add(
 		// 	IPC.on(ipcMain, 'HelloThere', (path) => {
-		// 		logger.info('AH! General Kenobi. A bold one ' + path);
+		// 		logger.info('AH! General Kenobi . A bold one ' + path);
 		// 	})
 		// );
 		// this.disposable.add(

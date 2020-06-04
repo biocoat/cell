@@ -1,3 +1,10 @@
+# [NEXT](https://github.com/biocoat/cell/releases/)
+
+- Code Cleanup. Successful TSC compilation
+  - Finished migration from js to ts; tsc . compiles successfully now. ElectronJS errors suppressed by @types/nodes: 12
+- Added automatic updates
+<!-- END RELEASE NOTES -->
+
 # [v0.2.1](https://github.com/biocoat/cell/releases/tag/v0.2.1)
 
 ## Changes
