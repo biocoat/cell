@@ -27,6 +27,8 @@ export class CellApplication {
 
 		//setup update
 		autoUpdater.logger = logger;
+		//For prerelease to work
+		autoUpdater.allowPrerelease = true;
 	}
 
 	createMainWindow(): void {

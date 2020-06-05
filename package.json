@@ -1,6 +1,6 @@
 {
   "name": "cell",
-  "version": "0.2.2",
+  "version": "0.2.2.1",
   "description": "A code editor for the biologist",
   "main": "out/main.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
     "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\""
   },
-  "repository": "https://github.com/biocoat/cell",
+  "repository": "https://github.com/joehal9000/cell",
   "author": "Wajdi Halabi",
   "build": {
     "appId": "io.biocoat.cell",
