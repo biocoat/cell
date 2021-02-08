@@ -10,8 +10,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - run: yarn #Install node_modules
-      - run: yarn build
-      - run: yarn prettier:check
+      - run: npm install #Install node_modules
+      - run: npm run build
+      - run: npm run prettier:check
         if: always()
       # - run: yarn test
