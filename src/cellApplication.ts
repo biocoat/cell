@@ -71,17 +71,17 @@ export class CellApplication {
 		});
 		autoUpdater.on('update-available', () => {
 			logger.info('Update available');
-			mainWindow.webContents.send('status-change', 'Update available');
+			if (mainWindow) mainWindow.webContents.send('status-change', 'Update available');
 		});
 
 		autoUpdater.on('error', (err) => {
 			logger.error('AutoUpdater err' + err);
-			mainWindow.webContents.send('status-change', 'Update Error');
+			if (mainWindow) mainWindow.webContents.send('status-change', 'Update Error');
 		});
 
 		autoUpdater.on('update-downloaded', (info) => {
 			logger.info('Update available');
-			mainWindow.webContents.send('status-change', 'Update Downloaded');
+			if (mainWindow) mainWindow.webContents.send('status-change', 'Update Downloaded');
 		});
 
 		autoUpdater.checkForUpdatesAndNotify();
