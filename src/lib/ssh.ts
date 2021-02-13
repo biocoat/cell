@@ -87,6 +87,7 @@ export class Ssh {
 						}
 
 						list.sort(sortDir);
+						console.log('sort dir found');
 						event.reply('fe-dir', {
 							path: path,
 							username: username,

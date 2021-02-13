@@ -1,7 +1,7 @@
 'use strict';
 
-import { EventEmitter } from 'events';
 import { ipcRenderer } from 'electron';
+import { EventEmitter } from 'events';
 
 // const Ssh = require('../lib/Ssh');
 
@@ -20,6 +20,7 @@ export class FileExplorer extends EventEmitter {
 			if (args === 'OK') {
 				console.log('Hello?');
 				this.ls('/home/' + this.username);
+				// this.update()
 			} else {
 				console.error('SSH FAILED ' + args);
 			}
@@ -34,7 +35,7 @@ export class FileExplorer extends EventEmitter {
 		// this.ssh = new Ssh();
 	}
 
-	//Get director for path:String
+	//Get directory for path:String
 	ls(path: string): void {
 		// var fe = this;
 		console.log(path);
@@ -156,6 +157,7 @@ export class FileExplorer extends EventEmitter {
 					});
 					ipcRenderer.invoke('ssh-login', config, pass).then((res) => {
 						//wait for a send
+						// this.ls();
 					});
 				});
 			});
